@@ -3,6 +3,14 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+#retirer autre fichier (juste .h .hpp .cpp)
+*.sln
+*.vcxproj*
+
+# SFML folder results
+SFML-2.5.1/
+SFML/
+
 # User-specific files
 *.rsuser
 *.suo
