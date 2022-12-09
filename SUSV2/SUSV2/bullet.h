@@ -21,7 +21,6 @@ class bullet
 	bool operator>(const sf::Vector2i&) const;
 
 private:
-	//sf::Texture _textBalle;
 	gameDataRef _data;
 	sf::Vector2f _position;
 	sf::Sprite _sprite;
