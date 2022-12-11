@@ -5,6 +5,6 @@ using namespace sf;
 #define SCREEN_HEIGHT 1024
 int main()
 {
-	game flappy(SCREEN_WIDTH, SCREEN_HEIGHT, "Flappy Bird");
+	game flappy(SCREEN_WIDTH, SCREEN_HEIGHT, "SUS: RELOADED");
 	return EXIT_SUCCESS;
 }

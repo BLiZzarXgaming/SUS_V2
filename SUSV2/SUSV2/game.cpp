@@ -1,5 +1,5 @@
 #include "game.h"
-//#include "splashState.h" //enlever le commentaire lors de l’appel du spashState
+#include "gameState.h"
 #include <time.h>
 #include <stdlib.h>
 
@@ -8,10 +8,10 @@ game::game(int width, int height, string title)
 	
 	_data = make_shared<gameData>(); //création de la game en mémoire dynamique
 	//création de la fenêtre qui changera de contenu selon la state créée ensuite
-	_data->window.create(VideoMode(width, height), title, Style::Close | Style::Titlebar);
+	_data->window.create(VideoMode(width, height), title, Style::Titlebar | Style::Close);
 	
 	//todo création d’un 1er état de jeu (1ère fenêtre)
-	//_data->machine.addState(stateRef(new splashState(_data)));
+	_data->machine.addState(stateRef(new gameState(_data)));
 	
 	//todo initialisation du random avec srand pour la création des pipes de hauteur aléatoire
 	run();

@@ -1,7 +1,7 @@
 /*	##############################################################################
 	Auteur		: Matias Beaulieu
 	Date		: 2022/09/22
-	Programme	: map.hpp
+	Programme	: matrice.hpp
 	But			: une matrice générique en 2D allouée dynamiquement en mémoire
 	##############################################################################	*/
 
@@ -11,11 +11,11 @@
 #include <assert.h>
 
 template <class TYPE>
-class map
+class matrice
 {
 private:
-	char* _name;										//pointeur sur le nom de la map
-	TYPE** _map;										//La map dynamique en ligne et colonne
+	char* _name;										//pointeur sur le nom de la matrice
+	TYPE** _matrice;										//La matrice dynamique en ligne et colonne
 	int _nbLine,										//nombre de ligne pour la matrice
 		_nbCol;											//nombre de colonne pour la matrice
 
@@ -30,30 +30,30 @@ private:
 		}	
 	}
 
-	void allocMap(int nbLine, int nbCol) {				//allocateur de map en mémoire
+	void allocmatrice(int nbLine, int nbCol) {				//allocateur de matrice en mémoire
 		if (nbLine == 0 || nbCol == 0) {
 			_nbLine = _nbLine = 0;
-			_map = nullptr;
+			_matrice = nullptr;
 		}
 		else {
 			_nbLine = nbLine;
 			_nbCol = nbCol;
 
-			_map = new TYPE * [nbLine];
+			_matrice = new TYPE * [nbLine];
 
 			for (int i = 0; i < nbLine; i++) {
-				*(_map + i) = new TYPE[nbCol];
+				*(_matrice + i) = new TYPE[nbCol];
 			}
 		}
 	}
 public:
-	map();
-	map(const char* name, int line, int col);
-	map(const map& m);
-	~map();
+	matrice();
+	matrice(const char* name, int line, int col);
+	matrice(const matrice& m);
+	~matrice();
 
-	void clear();										//clear la map et le nom
-	void clearMap();									//clear la map et remet les dimensions à 0
+	void clear();										//clear la matrice et le nom
+	void clearmatrice();									//clear la matrice et remet les dimensions à 0
 	void clearName();									//clear le nom
 
 														//getteurs / setteurs
@@ -64,85 +64,85 @@ public:
 	TYPE& at(int posI, int posJ)const;					//retourne une référence à l’élément
 	TYPE*& operator[](int pos)const;					//à la position i,j pour accéder ou modifier
 
-	const char* getName()const;							//retourne le nom de la map
-	void setName(const char* name);						//modifie le nom de la map
+	const char* getName()const;							//retourne le nom de la matrice
+	void setName(const char* name);						//modifie le nom de la matrice
 
-	const map& operator=(const map&);					//surcharge de l'operateur = pour affecter une map
+	const matrice& operator=(const matrice&);					//surcharge de l'operateur = pour affecter une matrice
 
 	void print(std::ostream& sortie)const;				//print la matrice (sans le nom)
-	void read(std::istream& entree);					//lit la matrice de la map ds le flux
+	void read(std::istream& entree);					//lit la matrice de la matrice ds le flux
 };
 
 template <class TYPE>
-std::ostream& operator<<(std::ostream& sortie, const map<TYPE>& m);		//surcharge de l'opérateur<<
+std::ostream& operator<<(std::ostream& sortie, const matrice<TYPE>& m);		//surcharge de l'opérateur<<
 template <class TYPE>													
-std::istream& operator>>(std::istream& entree, map<TYPE>& m);			//surcharge de l'opérateur>>
+std::istream& operator>>(std::istream& entree, matrice<TYPE>& m);			//surcharge de l'opérateur>>
 																		
-//Constructeur du map vide (par défaut)
+//Constructeur du matrice vide (par défaut)
 template<class TYPE>
-map<TYPE>::map()
+matrice<TYPE>::matrice()
 {
 	_name = nullptr;
-	_map = nullptr;
+	_matrice = nullptr;
 	_nbCol = _nbLine = 0;
 }
 
-//Constructeur du map avec paramètres nom, nombre de lignes et de colones
+//Constructeur du matrice avec paramètres nom, nombre de lignes et de colones
 template<class TYPE>
-map<TYPE>::map(const char* name, int nbLine, int nbCol)
+matrice<TYPE>::matrice(const char* name, int nbLine, int nbCol)
 {
 	assert(nbLine >= 0 && nbCol >= 0);
 
 	allocName(name);
-	allocMap(nbLine, nbCol);
+	allocmatrice(nbLine, nbCol);
 }
 
-//Constructeur de copie, qui construit une copie d'un map avec celui-ci en paramètre
+//Constructeur de copie, qui construit une copie d'un matrice avec celui-ci en paramètre
 template<class TYPE>
-map<TYPE>::map(const map<TYPE>& m)
+matrice<TYPE>::matrice(const matrice<TYPE>& m)
 {
 	allocName(m._name);
 
-	allocMap(m._nbLine, m._nbCol);
+	allocmatrice(m._nbLine, m._nbCol);
 
 	for (int i = 0; i < _nbLine; i++) {				//copy elements
 		for (int j = 0; j < _nbCol; j++) {
-			*(*(_map + i) + j) = *(*(m._map + i) + j);
+			*(*(_matrice + i) + j) = *(*(m._matrice + i) + j);
 		}
 	}
 }
 
-//Destructeur du map
+//Destructeur du matrice
 template<class TYPE>
-map<TYPE>::~map()
+matrice<TYPE>::~matrice()
 {
 	clear();
 }
 
-//Méthode clear du map et du nom pour effacer les valeurs dans le map et l'enlever de la mémoire
+//Méthode clear du matrice et du nom pour effacer les valeurs dans le matrice et l'enlever de la mémoire
 template<class TYPE>
-void map<TYPE>::clear()
+void matrice<TYPE>::clear()
 {
-	clearMap();
+	clearmatrice();
 	clearName();
 }
 
-//Méthode clear du map
+//Méthode clear du matrice
 template<class TYPE>
-void map<TYPE>::clearMap()
+void matrice<TYPE>::clearmatrice()
 {
 	for (int i = 0; i < _nbLine; i++) {
-		delete[] * (_map + i);
+		delete[] * (_matrice + i);
 	}
 
-	delete[] _map;
-	_map = nullptr;
+	delete[] _matrice;
+	_matrice = nullptr;
 	_nbCol = _nbLine = 0;
 }
 
 //Méthode clear du nom
 template<class TYPE>
-void map<TYPE>::clearName()
+void matrice<TYPE>::clearName()
 {
 	delete[] _name;
 	_name = nullptr;
@@ -150,21 +150,21 @@ void map<TYPE>::clearName()
 
 //Getteur du nombre de ligne
 template<class TYPE>
-int map<TYPE>::nbLine() const
+int matrice<TYPE>::nbLine() const
 {
 	return _nbLine;
 }
 
 //Getteur du nombre de colones
 template<class TYPE>
-int map<TYPE>::nbCol() const
+int matrice<TYPE>::nbCol() const
 {
 	return _nbCol;
 }
 
-//Resize du map, permet d'augmenter ou diminuer la dimension du map
+//Resize du matrice, permet d'augmenter ou diminuer la dimension du matrice
 template<class TYPE>
-void map<TYPE>::resize(int nbLine, int nbCol)
+void matrice<TYPE>::resize(int nbLine, int nbCol)
 {
 	assert(nbLine >= 0 && nbCol >= 0);
 
@@ -184,44 +184,44 @@ void map<TYPE>::resize(int nbLine, int nbCol)
 
 		for (int i = 0; i < nbLine && i < _nbLine; i++) {
 			for (int j = 0; j < nbCol && j < _nbCol; j++) {
-				*(*(temp + i) + j) = *(*(_map + i) + j);
+				*(*(temp + i) + j) = *(*(_matrice + i) + j);
 			}
 		}
 	}
 	else 
 		nbLine = nbCol = 0;
 
-	clearMap();
+	clearmatrice();
 
-	_map = temp;
+	_matrice = temp;
 	_nbLine = nbLine;
 	_nbCol = nbCol;
 }
 
-//Méthode at, permet d'affecter une valeur à un endroit dans la map ou bien de retourner une valeur
+//Méthode at, permet d'affecter une valeur à un endroit dans la matrice ou bien de retourner une valeur
 template<class TYPE>
-TYPE& map<TYPE>::at(int posI, int posJ) const
+TYPE& matrice<TYPE>::at(int posI, int posJ) const
 {
 	assert(posI >= 0 && posI < _nbLine);
 	assert(posJ >= 0 && posJ < _nbCol);
 
-	return *(*(_map + posI) + posJ);
+	return *(*(_matrice + posI) + posJ);
 }
 
-//Surcharge de l'opérateur crochet, permet d'affecter une valeur à un endroit dans une dimension du map ou de
+//Surcharge de l'opérateur crochet, permet d'affecter une valeur à un endroit dans une dimension du matrice ou de
 //retourner une valeur à un endroit
 template<class TYPE>
-TYPE*& map<TYPE>::operator[](int pos) const
+TYPE*& matrice<TYPE>::operator[](int pos) const
 {
 	assert(pos >= 0 && pos < _nbLine);
 
-	return *(_map + pos);
+	return *(_matrice + pos);
 }
 
-//Surcharge de l'opérateur égal, pour affecter une map à une autre, écrase le paramètre implicite par l'explicite
+//Surcharge de l'opérateur égal, pour affecter une matrice à une autre, écrase le paramètre implicite par l'explicite
 //et le retourne
 template<class TYPE>
-const map<TYPE>& map<TYPE>::operator=(const map& m)
+const matrice<TYPE>& matrice<TYPE>::operator=(const matrice& m)
 {
 	if (this == &m) return *this;
 
@@ -230,7 +230,7 @@ const map<TYPE>& map<TYPE>::operator=(const map& m)
 
 	for (int i = 0; i < _nbLine; i++) {				//copy elements
 		for (int j = 0; j < _nbCol; j++) {
-			*(*(_map + i) + j) = *(*(m._map + i) + j);
+			*(*(_matrice + i) + j) = *(*(m._matrice + i) + j);
 		}
 	}
 
@@ -240,7 +240,7 @@ const map<TYPE>& map<TYPE>::operator=(const map& m)
 
 //Getteur du nom
 template<class TYPE>
-const char* map<TYPE>::getName() const
+const char* matrice<TYPE>::getName() const
 {
 	if (_name == nullptr)
 		return "\0";
@@ -250,19 +250,19 @@ const char* map<TYPE>::getName() const
 
 //Setteur du nom avec clear et alloc
 template<class TYPE>
-void map<TYPE>::setName(const char* name)
+void matrice<TYPE>::setName(const char* name)
 {
 	clearName();
 	allocName(name);
 }
 
-//Méthode print pour l'affichage en deux dimensions des valeurs contenues dans un map
+//Méthode print pour l'affichage en deux dimensions des valeurs contenues dans un matrice
 template<class TYPE>
-void map<TYPE>::print(std::ostream& sortie) const
+void matrice<TYPE>::print(std::ostream& sortie) const
 {
 	for (int i = 0; i < _nbLine; i++) {
 		for (int j = 0; j < _nbCol; j++) {
-			sortie << std::left << std::setw(4) << *(*(_map + i) + j);
+			sortie << std::left << std::setw(5) << *(*(_matrice + i) + j);
 		}
 
 		sortie << std::endl;
@@ -271,18 +271,18 @@ void map<TYPE>::print(std::ostream& sortie) const
 
 //Méthode read pour la lecture d'un fichier ou d'un entrée quelconque
 template<class TYPE>
-void map<TYPE>::read(std::istream& entree)
+void matrice<TYPE>::read(std::istream& entree)
 {
 	for (int i = 0; i < _nbLine; i++) {
 		for (int j = 0; j < _nbCol; j++) {
-			entree >> *(*(_map + i) + j);
+			entree >> *(*(_matrice + i) + j);
 		}
 	}
 }
 
 //Surcharge de l'opérateur <<, pour appeler naturelement l'affichage
 template<class TYPE>
-std::ostream& operator<<(std::ostream& sortie, const map<TYPE>& m)
+std::ostream& operator<<(std::ostream& sortie, const matrice<TYPE>& m)
 {
 	m.print(sortie);
 
@@ -291,7 +291,7 @@ std::ostream& operator<<(std::ostream& sortie, const map<TYPE>& m)
 
 //Surcharge de l'opérateur >>, pour appeler naturelement la lecture (readFile)
 template<class TYPE>
-std::istream& operator>>(std::istream& entree, map<TYPE>& m)
+std::istream& operator>>(std::istream& entree, matrice<TYPE>& m)
 {
 	m.read(entree);
 
