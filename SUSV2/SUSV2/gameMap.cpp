@@ -17,7 +17,7 @@ gameMap::gameMap(gameDataRef data) : _data(data)
 
 	cout << mapLue;
 
-	int tile = mapLue[0][0] - 1;
+	int tile;
 
 	Sprite sprite1(_data->assets.getTexture("mapTileSet"));
 	IntRect rect(0, 0, MAP_TILESET_SIZE, MAP_TILESET_SIZE);

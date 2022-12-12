@@ -16,6 +16,7 @@ private:
 	Clock _clock;
 	int _gameState;
 
+	Sprite _background;
 	gameMap* _map;
 
 public:

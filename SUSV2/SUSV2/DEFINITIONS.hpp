@@ -33,8 +33,6 @@ enum tileType {
 };
 
 #define MAP_TILESET_FILEPATH "Ressources/tileset/Sus_Tileset_Flooring.png"
-#define MAP_TILESET_COUNT 20	//nombre de tiles utilisable, 
-								//j'utilise ca pour la génération
-								//du vertex
 #define MAP_TILESET_SIZE 32		//grandeur carrée des textures
 #define MAP_MAIN_FILEPATH "Ressources/maps/map_2.txt"
+#define MAIN_BACKGROUND_FILEPATH "Ressources/SUS_Background.png"
