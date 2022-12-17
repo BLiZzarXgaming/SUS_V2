@@ -1,7 +1,9 @@
 #include "game.h"
+#include "gameState.h"
 //#include "splashState.h" //enlever le commentaire lors de l’appel du spashState
 #include <time.h>
 #include <stdlib.h>
+
 
 game::game(int width, int height, string title)
 {
@@ -10,10 +12,8 @@ game::game(int width, int height, string title)
 	//création de la fenêtre qui changera de contenu selon la state créée ensuite
 	_data->window.create(VideoMode(width, height), title, Style::Close | Style::Titlebar);
 	
-	//todo création d’un 1er état de jeu (1ère fenêtre)
-	//_data->machine.addState(stateRef(new splashState(_data)));
-	
-	//todo initialisation du random avec srand pour la création des pipes de hauteur aléatoire
+	_data->machine.addState(stateRef(new gameState(_data)));
+
 	run();
 }
 //le game loop de tout jeu fonctionne comme suit : on exécute à chaque loop la méthode

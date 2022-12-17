@@ -20,3 +20,4 @@ Vector2i inputManager::getMousePosition(RenderWindow& window) const
 {
 	return Mouse::getPosition(window);
 }
+
