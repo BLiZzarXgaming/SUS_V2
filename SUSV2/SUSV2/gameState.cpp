@@ -1,6 +1,6 @@
 #include "gameState.h"
 #include <iostream>
-//le constructeur utilise les : pour initialiser _data avant même l’exécution du contenu{}
+//le constructeur utilise les : pour initialiser _data avant mï¿½me lï¿½exï¿½cution du contenu{}
 gameState::gameState(gameDataRef data) : _data(data)
 {
 	_player = nullptr;
@@ -9,20 +9,26 @@ gameState::gameState(gameDataRef data) : _data(data)
 
 gameState::~gameState() {
 	delete _player;
+  delete _map;
 }
 
 
 void gameState::init()
 {
 	_data->assets.loadTexture("player sprite sheet", PLAYER_SPRITESHEET_FILEPATH);
-
 	_player = new player(_data);
-
 	_gameState = gameStates::ready;
+  
+  _data->assets.loadTexture("mapTileSet", MAP_TILESET_FILEPATH);
+	_data->assets.loadTexture("main background", MAIN_BACKGROUND_FILEPATH);
+	_background.setTexture(_data->assets.getTexture("main background"));
+	_background.setPosition(100, -20);
+	
+	_map = new gameMap(_data);
 
 }
 
-//fenêtre qui reste ouverte tant qu’elle n’est pas fermée
+//fenï¿½tre qui reste ouverte tant quï¿½elle nï¿½est pas fermï¿½e
 void gameState::handleInput()
 {
 	Event event;
@@ -67,11 +73,11 @@ void gameState::handleInput()
 //aucune update
 void gameState::update(float dt)
 {
-	//si ce n’est pas gameOver
+	//si ce nï¿½est pas gameOver
 	if (_gameState != gameStates::gameOver) {
 		//rajouter un if qui dit a l'ennemie de se diriger vers le player si il est dans le range
 	}
-	//si c’est playing, on a cliqué, donc on joue.
+	//si cï¿½est playing, on a cliquï¿½, donc on joue.
 
 	if (_gameState == gameStates::playing) {
 
@@ -97,12 +103,15 @@ void gameState::update(float dt)
 
 	//-------JUSQU'ICI---------------------------------------------------
 }
-//clear, dessine le background et display la fenêtre. (dt n’est pas utilisé ici)
+
+//clear, dessine le background et display la fenï¿½tre. (dt nï¿½est pas utilisï¿½ ici)
 void gameState::draw(float dt) const
 {
 	_data->window.clear();
-
+_data->window.clear();
+	_data->window.draw(_background);
+	_map->draw();
+	_data->window.display();
 	_data->window.setView(_viewJoueur);
 	_player->draw();
-	_data->window.display();
 }

@@ -1,15 +1,20 @@
 #pragma once
 
+#include <SFML/Graphics.hpp>
 #include "DEFINITIONS.hpp"
 #include "game.h"
 #include "state.hpp"
 #include "player.h"
 #include <SFML/Audio.hpp>
+#include <iostream>
+#include "state.hpp"
+#include "gameMap.h"
 
 using namespace sf;
 using namespace std;
-//chaque state représentera une vraie fenêtre et hérite de state, car on implémentera 
-//un init, update, draw et handleInput différent pour chaque fenêtre.
+//chaque state reprï¿½sentera une vraie fenï¿½tre et hï¿½rite de state, car on implï¿½mentera 
+//un init, update, draw et handleInput diffï¿½rent pour chaque fenï¿½tre.
+
 class gameState : public state
 {
 private:
@@ -26,6 +31,9 @@ private:
 	sf::View _viewJoueur;
 
 	Music _music;
+
+	Sprite _background;
+	gameMap* _map;
 
 public:
 	gameState(gameDataRef data);
