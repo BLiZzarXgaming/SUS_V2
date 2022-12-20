@@ -4,6 +4,7 @@ void stateMachine::addState(stateRef newState, bool isReplacing)
 {
 	_isAdding = true;
 	_isReplacing = isReplacing;
+
 	_newState = move(newState);
 }
 
