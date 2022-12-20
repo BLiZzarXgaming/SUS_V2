@@ -4,7 +4,7 @@
 #define SCREEN_HEIGHT sf::VideoMode::getDesktopMode().height
 #define LOGO_STATE_SHOW_TIME 3.0
 
-//#define SPLASH_STATE_BACKGROUND_FILEPATH "Ressources/res/SplashBackground.png"
+#define SPLASH_STATE_BACKGROUND_FILEPATH "ressources/images/SUS_Background1.png"
 
 #define BULLET_FILEPATH "ressources/images/balle.png"
 #define MAIN_MENU_STATE_BACKGROUND_FILEPATH "ressources/images/menu_principale.png"
