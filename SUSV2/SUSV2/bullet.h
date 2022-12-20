@@ -5,9 +5,10 @@
 
 class bullet
 {
+public:
 	bullet(gameDataRef data);
 	~bullet();
-	void draw();
+	void draw() const;
 	void stopVol();
 	bool getEstTire() const;
 	void tirer(sf::Vector2f positionDepart, sf::Vector2f positionVise);

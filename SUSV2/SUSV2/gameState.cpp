@@ -6,6 +6,7 @@ gameState::gameState(gameDataRef data) : _data(data)
 	_player = nullptr;
 	_gameState = gameStates::ready;
 	_hud = nullptr;
+	_balle = nullptr;
 	
 }
 
@@ -13,6 +14,7 @@ gameState::~gameState() {
 	delete _player;
 	delete _map;
 	delete _hud;
+	delete _balle;
 }
 
 
@@ -42,7 +44,6 @@ void gameState::init()
 	_hud = new Hud(_data);
 	
 	_map = new gameMap(_data);
-
 }
 
 //fen�tre qui reste ouverte tant qu�elle n�est pas ferm�e
@@ -116,7 +117,7 @@ void gameState::update(float dt)
 	_player->setPosViseur(_posSourisJeu);
 	_player->update(dt);
 
-	cout << _player->getX() << "   " << _player->getY() << endl;
+	//cout << _player->getX() << "   " << _player->getY() << endl;
 
 	if (_player->getY() > 150)		//fait en sorte que le background ne descende pas lorsque le joueur est bas dans la map
 		_background.setPosition(_player->getX(), 150);

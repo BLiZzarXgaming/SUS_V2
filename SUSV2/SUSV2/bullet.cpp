@@ -1,4 +1,4 @@
-#include "Bullet.h"
+#include "bullet.h"
 
 using namespace sf;
 
@@ -10,6 +10,9 @@ bullet::bullet(gameDataRef data) : _data(data)
 	_estTire = false;
 	_distanceX = 0;
 	_distanceY = 0;
+
+	_data->assets.loadTexture("image balle", BULLET_FILEPATH);
+	_sprite.setTexture(_data->assets.getTexture("image balle"));
 }
 
 bullet::~bullet()
@@ -17,7 +20,7 @@ bullet::~bullet()
 
 }
 
-void bullet::draw()
+void bullet::draw() const
 {
 	_data->window.draw(_sprite);
 }

@@ -5,11 +5,13 @@
 #include "game.h"
 #include "state.hpp"
 #include "player.h"
+#include "bullet.h"
 #include <SFML/Audio.hpp>
 #include <iostream>
 #include "state.hpp"
 #include "gameMap.h"
 #include "hud.h"
+
 
 using namespace sf;
 using namespace std;
@@ -36,6 +38,8 @@ private:
 	gameMap* _map;
 
 	Hud* _hud;
+
+	bullet* _balle;
 
 public:
 	gameState(gameDataRef data);
