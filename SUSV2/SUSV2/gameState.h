@@ -9,6 +9,7 @@
 #include <iostream>
 #include "state.hpp"
 #include "gameMap.h"
+#include "hud.h"
 
 using namespace sf;
 using namespace std;
@@ -32,8 +33,9 @@ private:
 
 	Music _music;
 
-	Sprite _background;
 	gameMap* _map;
+
+	Hud* _hud;
 
 public:
 	gameState(gameDataRef data);

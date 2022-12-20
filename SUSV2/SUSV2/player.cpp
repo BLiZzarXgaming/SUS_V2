@@ -1,9 +1,4 @@
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
-#include <iostream>
 #include "player.h"
-
-using namespace sf;
 
 player::player(gameDataRef data) : _data(data) {
 	_vie = 3;
@@ -13,15 +8,12 @@ player::player(gameDataRef data) : _data(data) {
 	_direction = false;
 	_damage = 1;
 	_speed = 0;
-	_playerTexture.loadFromFile("Ressources/res/SUS_Player_Sheet.png");
-	_sprite.setTexture(_playerTexture);
+	_sprite.setTexture(_data->assets.getTexture("player sprite sheet"));
 	_frameActuel = 0;
 	_tempsAnimation = 0;
 	_balleActuel = 0;
 	_nbrBalleReste = 0;
-	setPlayerTexture();
 }
-
 
 player::~player() {
 	_vie = 0;
@@ -274,7 +266,7 @@ void player::setPlayerTexture() {
 
 		if (_frameActuel >= _nbrImageBas - 1 || !mouvement)
 		{
-			_frameActuel = 0;
+			_frameActuel = 1;
 		}
 		else if (_tempsAnimation >= _delaisEntreFrame)
 		{
@@ -310,7 +302,7 @@ void player::setPlayerTexture() {
 
 		if (_frameActuel >= _nbrImageHaut - 1 || !mouvement)
 		{
-			_frameActuel = 0;
+			_frameActuel = 1;
 		}
 		else if (_tempsAnimation >= _delaisEntreFrame)
 		{

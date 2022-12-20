@@ -5,6 +5,8 @@
 
 #define PLAYER_SPRITESHEET_FILEPATH "Ressources/res/SUS_Player_Sheet.png"
 
+#define PLAYER_HEALTH_FILEPATH "Ressources/res/SUS_Player_healthbar.png"
+
 enum gameStates {
 	ready,
 	playing,

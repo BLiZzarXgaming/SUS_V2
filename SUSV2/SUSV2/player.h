@@ -2,6 +2,8 @@
 #include "DEFINITIONS.hpp"
 #include "game.h"
 #include "state.hpp"
+#include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 class player
 {
@@ -39,7 +41,7 @@ private:
 	sf::FloatRect _hitbox;
 
 public:
-	player(gameDataRef);
+	player(gameDataRef data);
 	~player();
 
 	void setVie(int vie);
