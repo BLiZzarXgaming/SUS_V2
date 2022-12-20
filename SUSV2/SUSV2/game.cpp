@@ -2,26 +2,25 @@
 //#include "splashState.h" //enlever le commentaire lors de l’appel du spashState
 // à enlever après
 #include "mainMenuState.h"
-#include "gameState.h"
+//#include "gameState.h"
 #include <time.h>
 #include <stdlib.h>
 
 
 game::game(int width, int height, string title)
 {
+	_data = make_shared<gameData>(); //création de la game en mémoire dynamique
 
+	//creation de la fenetre qui changera de contenu selon la state creee ensuite
+	_data->window.create(VideoMode(width, height), title, Style::Fullscreen | Style::Close);
+	_data->window.setFramerateLimit(60);
+	//_data->machine.addState(stateRef(new gameState(_data)));
 	
 	//todo création d’un 1er état de jeu (1ère fenêtre)
 	//_data->machine.addState(stateRef(new splashState(_data)));
 
 	//todo enlever après dans le splashstate
 	_data->machine.addState(stateRef(new mainMenuState(_data)));
-
-	//crÃ©ation de la fenÃªtre qui changera de contenu selon la state crÃ©Ã©e ensuite
-	_data->window.create(VideoMode(width, height), title, Style::Fullscreen);
-	_data->window.setFramerateLimit(60);
-	_data->machine.addState(stateRef(new gameState(_data)));
-
 
 	run();
 }

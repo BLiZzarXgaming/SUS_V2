@@ -4,7 +4,7 @@
 #include "game.h"
 #include "state.hpp"
 #include <vector>
-//#include "gameState.h"
+#include "gameState.h"
 #include "commentJouerState.h"
 #include "creditState.h"
 #include "statsState.h"
