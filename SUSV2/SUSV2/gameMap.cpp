@@ -15,11 +15,11 @@ gameMap::gameMap(gameDataRef data) : _data(data)
 		fichierMap.close();
 	}
 
-	cout << mapLue;
+	//cout << mapLue;
 
 	int tile;
 
-	Sprite sprite1(_data->assets.getTexture("mapTileSet"));
+	Sprite sprite(_data->assets.getTexture("mapTileSet"));
 	IntRect rect(0, 0, MAP_TILESET_SIZE, MAP_TILESET_SIZE);
 
 	for (int i = 0; i < mapLue.nbLine(); i++)
@@ -27,13 +27,15 @@ gameMap::gameMap(gameDataRef data) : _data(data)
 		for (int j = 0; j < mapLue.nbCol(); j++)
 		{
 			tile = mapLue[i][j] - 1;
+			if (tile == 0)
+				tile = rand() % 3;
 			rect.left = tile * MAP_TILESET_SIZE;
-			sprite1.setTextureRect(rect);
-			sprite1.setPosition(j * MAP_TILESET_SIZE, i * MAP_TILESET_SIZE);
-			if (tile <= 4 || tile >= 21)
-				_mapSpritesSol.push_back(sprite1);
+			sprite.setTextureRect(rect);
+			sprite.setPosition(j * MAP_TILESET_SIZE, i * MAP_TILESET_SIZE);
+			if (tile <= 3 || tile >= 21)
+				_mapSpritesSol.push_back(sprite);
 			else
-				_mapSpritesMur.push_back(sprite1);
+				_mapSpritesMur.push_back(sprite);
 		}
 	}
 }
