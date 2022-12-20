@@ -1,5 +1,7 @@
 #include "game.h"
 //#include "splashState.h" //enlever le commentaire lors de l’appel du spashState
+// à enlever après
+#include "mainMenuState.h"
 #include <time.h>
 #include <stdlib.h>
 
@@ -12,6 +14,9 @@ game::game(int width, int height, string title)
 	
 	//todo création d’un 1er état de jeu (1ère fenêtre)
 	//_data->machine.addState(stateRef(new splashState(_data)));
+
+	//todo enlever après dans le splashstate
+	_data->machine.addState(stateRef(new mainMenuState(_data)));
 	
 	//todo initialisation du random avec srand pour la création des pipes de hauteur aléatoire
 	run();

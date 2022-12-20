@@ -4,7 +4,7 @@ using namespace sf;
 
 bullet::bullet(gameDataRef data) : _data(data)
 {
-	_sprite.setTexture(_data->assets.getTexture("bullet"));
+	//_sprite.setTexture(_data->assets.getTexture("bullet"));
 	_vitesse = SPEED_BULLET;
 	_porteBalle = RANGE_BULLET;
 	_estTire = false;

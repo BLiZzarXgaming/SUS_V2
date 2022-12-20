@@ -3,14 +3,23 @@
 //le constructeur utilise les : pour initialiser _data avant meme l execution du contenu
 mainMenuState::mainMenuState(gameDataRef data) : _data(data)
 {
+	// alloue d avance l espace necessaire
+	_boutton.reserve(6);
+	_texts.reserve(6);
 }
 //load l image du background a l aide du assetManager ds _data et la set au Sprite
 void mainMenuState::init()
 {
+	// pour le background
 	_data->assets.loadTexture("main menu state background", MAIN_MENU_STATE_BACKGROUND_FILEPATH);
 	_background.setTexture(_data->assets.getTexture("main menu state background"));
+	_background.setOrigin(_background.getGlobalBounds().width / 2, _background.getGlobalBounds().height / 2);
+	_background.setPosition(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+	_background.setScale(5, 5);
 
-	_data->assets.loadFont("font button", "TODO");
+	// pour les textes
+	_data->assets.loadFont("font button", MAIN_FONT_FILEPATH);
+	
 
 	// set les bouttons
 	setBoutton(Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4), "UN JOUEUR");
@@ -57,26 +66,20 @@ void mainMenuState::handleInput()
 						//_etatActuel = PLAY;
 						break;
 					case 2: // stats
-						//_etatActuel = STATS;
-
+						_data->machine.addState(stateRef(new statsState(_data)));
 						break;
 					case 3: //credit
-						//_etatActuel = CREDITS;
+						_data->machine.addState(stateRef(new creditState(_data)));
 						break;
 					case 4: // comment jouer
-						//_etatActuel = COMMENT_JOUER;
+						_data->machine.addState(stateRef(new commentJouerState(_data)));
 						break;
 					case 5: // quitter
-						//_etatActuel = QUITTER;
+						_data->window.close();
 						break;
 					}
 				break;
 			}
-		}
-		else if (_data->input.isSpriteClicked(_playButton, Mouse::Left, _data->window)) {
-			//create the new state main screen
-			//_data->machine.addState(stateRef(new gameState(_data)), true);
-			cout << "go to game state" << endl;
 		}
 	}
 }
@@ -94,21 +97,22 @@ void mainMenuState::update(float dt)
 			_boutton[i].setFillColor(COLOR_BUTTON);
 		}
 	}
-	//todo call the menu state
-	//_data->machine.addState(stateRef(new gameState(_data)), true);
-	std::cout << "in the main menu" << endl;
 }
 //clear, dessine le background et display la fenetre. (dt n est pas utilise ici)
-void mainMenuState::draw(float dt)
+void mainMenuState::draw(float dt) const 
 {
+	_data->window.clear();
 	_data->window.draw(_background);
 
 	for (int i = 0; i < _boutton.size(); i++)
 	{
 		_data->window.draw(_boutton[i]);
+		_data->window.draw(_texts[i]);
 	}
+	_data->window.display();
 }
 
+// bouge le boutton choisi de 1 en bas
 void mainMenuState::moveDown()
 {
 	if (_bouttonActuel < _boutton.size() - 1)
@@ -122,6 +126,7 @@ void mainMenuState::moveDown()
 	std::cout << "boutton actuel " << _bouttonActuel << std::endl;
 }
 
+// bouge le boutton choisi de 1 en haut
 void mainMenuState::moveUp()
 {
 	if (_bouttonActuel > 0)
@@ -135,14 +140,17 @@ void mainMenuState::moveUp()
 	std::cout << "boutton actuel " << _bouttonActuel << std::endl;
 }
 
+// donne l'index du boutton choisi
 int mainMenuState::getBouttonChoisi()
 {
 	return _bouttonActuel;
 }
 
+// crée un boutton avec un text et un rectangle
 void mainMenuState::setBoutton(sf::Vector2f position, std::string message)
 {
-	Text text; // le texte du boutton
+	// le texte du boutton
+	Text text; 
 	text.setString(message);
 	text.setFillColor(COLOR_TEXT);
 	text.setCharacterSize(SIZE_CARACTER_MENU);
@@ -152,11 +160,10 @@ void mainMenuState::setBoutton(sf::Vector2f position, std::string message)
 	text.setPosition(position.x - text.getGlobalBounds().width / 2, position.y); // permet de centrer le boutton horizontalement
 	_texts.push_back(text);
 
-	RectangleShape rectangle; // le rectangle du boutton
+	// le rectangle du boutton
+	RectangleShape rectangle; 
 	rectangle.setSize(Vector2f(text.getGlobalBounds().width + 20, text.getGlobalBounds().height + 20));
 	rectangle.setPosition(position.x - text.getGlobalBounds().width / 2 - 10, position.y + 10);
-
-	std::cout << text.getGlobalBounds().width << std::endl;
 	rectangle.setFillColor(COLOR_BUTTON);
 	_boutton.push_back(rectangle);
 

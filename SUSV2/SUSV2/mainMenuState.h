@@ -5,6 +5,9 @@
 #include "state.hpp"
 #include <vector>
 //#include "gameState.h"
+#include "commentJouerState.h"
+#include "creditState.h"
+#include "statsState.h"
 using namespace sf;
 
 class mainMenuState : public state
@@ -16,7 +19,6 @@ private:
 	Sprite _background; //le sprite pour la background
 	Sprite _title;		//le sprite pour le titre
 	Sprite _playButton; //le sprite pour le boutton play
-	Font _font;			// la police du text
 
 	int _bouttonActuel;
 	std::vector<sf::RectangleShape> _boutton;
@@ -27,7 +29,7 @@ public:
 	void init();
 	void handleInput();
 	void update(float dt);
-	void draw(float dt);
+	void draw(float dt) const;
 	void moveDown();
 	void moveUp();
 	int getBouttonChoisi();
