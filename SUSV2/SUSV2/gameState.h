@@ -35,6 +35,7 @@ private:
 	//Music _music;
 
 	gameMap* _map;
+	int _collidingWallID;
 
 	Hud* _hud;
 

@@ -21,6 +21,8 @@ private:
 	int _damage;
 	bool _direction, _haut = false, _bas = false, _droite = false, _gauche = false;
 	sf::Vector2f _vraiDir;
+	int _directionEnumHB;
+	int _directionEnumGD;
 	int _nbrBalleReste;
 	int _balleActuel;
 	bool _canMove;
@@ -68,6 +70,8 @@ public:
 	void setHitboxPos(sf::Vector2f);
 	void cycleMemoirePos();
 	void setCanMove(bool);
+	void setDirectionEnumHB(int); //haut bas
+	void setDirectionEnumGD(int); //gauche droite
 
 	double getVie()const;
 	double getMaxVie() const;
@@ -81,6 +85,9 @@ public:
 	sf::FloatRect getRectShape();
 	sf::Vector2f getVectPosition();
 	sf::Vector2f getMemoirePos() const;
+	int getDirectionEnumHB()const;
+	int getDirectionEnumGD()const;
+	bool getCanMove()const;
 
 	void moveUp();
 	void moveDown();

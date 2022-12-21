@@ -42,6 +42,7 @@ void gameState::init()
 	_hud = new Hud(_data);
 	
 	_map = new gameMap(_data);
+	_collidingWallID = 0;
 
 }
 
@@ -54,26 +55,31 @@ void gameState::handleInput()
 		if (event.type == Event::Closed)
 			_data->window.close();
 		else {
-
-			if (Keyboard::isKeyPressed(Keyboard::W))	//move up avec W
+			if (Keyboard::isKeyPressed(Keyboard::W) && _player->getCanMove()) {	//move up avec W
 				_player->moveUp();
+				_player->setDirectionEnumHB(directionEnumHB::haut);
+			}
 			else
 				_player->noMoveUp();
 
-
-			if (Keyboard::isKeyPressed(Keyboard::A))	//move left avec A
+			if (Keyboard::isKeyPressed(Keyboard::A) && _player->getCanMove()) {	//move left avec A
 				_player->moveLeft();
+				_player->setDirectionEnumGD(directionEnumGD::gauche);
+			}
 			else
 				_player->noMoveLeft();
 
-
-			if (Keyboard::isKeyPressed(Keyboard::S))	//move down avec S 
+			if (Keyboard::isKeyPressed(Keyboard::S) && _player->getCanMove()) {	//move down avec S 
 				_player->moveDown();
+				_player->setDirectionEnumHB(directionEnumHB::bas);
+			}
 			else
 				_player->noMoveDown();
 
-			if (Keyboard::isKeyPressed(Keyboard::D))	//move right avec D
+			if (Keyboard::isKeyPressed(Keyboard::D) && _player->getCanMove()) {	//move right avec D
 				_player->moveRight();
+				_player->setDirectionEnumGD(directionEnumGD::droite);
+			}
 			else
 				_player->noMoveRight();
 
@@ -88,7 +94,24 @@ void gameState::handleInput()
 			if (Keyboard::isKeyPressed(Keyboard::Escape)) {
 				_data->window.close();
 			}
+
+			
 		}
+	}
+
+	//permet de mettre a 0 les mouvements hors du polling
+	if (!Keyboard::isKeyPressed(Keyboard::W) && !Keyboard::isKeyPressed(Keyboard::S))
+	{
+		_player->setDirectionEnumHB(directionEnumHB::nohb);
+		_player->noMoveDown();
+		_player->noMoveUp();
+	}
+
+	if (!Keyboard::isKeyPressed(Keyboard::A) && !Keyboard::isKeyPressed(Keyboard::D))
+	{
+		_player->setDirectionEnumGD(directionEnumGD::nogd);
+		_player->noMoveRight();
+		_player->noMoveLeft();
 	}
 }
 //aucune update
@@ -117,15 +140,47 @@ void gameState::update(float dt)
 	_player->update(dt);
 
 	for (int i = 0; i < _map->getWalls().size(); i++)
-		if (_collision.checkSpriteCollision(_player->getSprite(), _map->getWalls().at(i))) {
-			_player->setPos(_player->getMemoirePos());
+		if (_collision.checkSpriteCollision(_player->getSprite(), 0.6f, _map->getWalls().at(i), 1)) {
 			_player->setCanMove(false);
+			_collidingWallID = 1 + _map->getWalls().at(i).getTextureRect().left / 32;
+			if (_collidingWallID == 5 ||
+				_collidingWallID == 17 ||
+				_collidingWallID == 18 ||
+				_collidingWallID == 19 ||
+				_collidingWallID == 20 ||
+				_collidingWallID == 11 ||
+				_collidingWallID == 12 ||
+				_collidingWallID == 15 ||
+				_collidingWallID == 16)
+			{
+				_player->moveDown();
+			}
+				
+			else if (_collidingWallID == 7)
+				_player->moveRight();
+			else if (_collidingWallID == 6)
+				_player->moveLeft();
+			else
+				_player->moveUp();
 		}
 		else if (i == 0) {
 			_player->setCanMove(true);
-			_player->cycleMemoirePos();
 		}
-	//cout << _player->getX() << "   " << _player->getY() << endl;
+
+	//if (_player->getDirectionEnumHB() == directionEnumHB::haut)
+	//	cout << "haut  ";
+	//if (_player->getDirectionEnumHB() == directionEnumHB::bas)
+	//	cout << "bas   ";
+	//if (_player->getDirectionEnumHB() == directionEnumHB::nohb)
+	//	cout << "no    ";
+	//if (_player->getDirectionEnumGD() == directionEnumGD::gauche)
+	//	cout << "gauche";
+	//if (_player->getDirectionEnumGD() == directionEnumGD::droite)
+	//	cout << "droite";
+	//if (_player->getDirectionEnumGD() == directionEnumGD::nogd)
+	//	cout << "no    ";
+
+	//cout << "  canMove: " << _player->getCanMove() << "   " << endl;
 
 	if (_player->getY() > 150)		//fait en sorte que le background ne descende pas lorsque le joueur est bas dans la map
 		_background.setPosition(_player->getX(), 150);

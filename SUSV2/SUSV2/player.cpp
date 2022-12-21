@@ -125,6 +125,16 @@ void player::setCanMove(bool can)
 	_canMove = can;
 }
 
+void player::setDirectionEnumHB(int dir)
+{
+	_directionEnumHB = dir;
+}
+
+void player::setDirectionEnumGD(int dir)
+{
+	_directionEnumGD = dir;
+}
+
 double player::getY()const
 {
 	return _positionJoueur.y;
@@ -200,6 +210,21 @@ sf::Vector2f player::getMemoirePos() const
 	return _memoirePos.front();
 }
 
+int player::getDirectionEnumHB() const
+{
+	return _directionEnumHB;
+}
+
+int player::getDirectionEnumGD() const
+{
+	return _directionEnumGD;
+}
+
+bool player::getCanMove() const
+{
+	return _canMove;
+}
+
 void player::noMoveDown()
 {
 	_bas = false;
@@ -223,21 +248,23 @@ void player::update(float dtEnSeconde)
 		_speed = 80;
 
 	_sprite.setOrigin(_sprite.getGlobalBounds().width / 2, _sprite.getGlobalBounds().width / 2); // permet de centrer l'ennemi
-	if (_haut) {
+	if ((_haut && !_bas) || (!_canMove && getDirectionEnumHB() == directionEnumHB::bas)) {
 		_positionJoueur.y -= _speed * dtEnSeconde;
+		//cout << "  HAUT: " << _haut;
 	}
-	if (_bas) {
+	if ((_bas && !_haut) || (!_canMove && getDirectionEnumHB() == directionEnumHB::haut)) {
 		_positionJoueur.y += _speed * dtEnSeconde;
+		//cout << "  BAS: " << _bas;
 	}
-	if (_gauche) {
+	if ((_gauche && !_droite) || (!_canMove && getDirectionEnumGD() == directionEnumGD::droite)) {
 		_positionJoueur.x -= _speed * dtEnSeconde;
+		//cout << "  GAUCHE: " << _gauche;
 	}
-	if (_droite) {
+	if ((_droite && !_gauche) || (!_canMove && getDirectionEnumGD() == directionEnumGD::gauche)) {
 		_positionJoueur.x += _speed * dtEnSeconde;
+		//cout << "  DOITE: " << _droite;
 	}
-
-	if (_canMove)
-		_sprite.setPosition(_positionJoueur);
+	_sprite.setPosition(_positionJoueur);
 
 	_tempsAnimation += dtEnSeconde; // ajoute le temps passé au temps de l'animation
 
