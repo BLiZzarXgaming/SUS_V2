@@ -19,7 +19,6 @@ gameState::~gameState() {
 	delete _fade;
 }
 
-
 void gameState::init()
 {
 
@@ -64,7 +63,7 @@ void gameState::init()
 
 
 	_collidingWallID = 0;
-  }
+  
 
 	// pour ennemi les textures
 	_data->assets.loadTexture("ennemi sprite sheet vivant", ENNEMI_SPRITESHEET_FILEPATH_VIVANT);
@@ -76,7 +75,7 @@ void gameState::init()
 	//rempli le vecteur d'ennemi
 	for (int i = 0; i < NBR_ENNEMI_MAX; i++)
 	{
-		ennemi* temp = new ennemi(40, 10, Vector2f(64, 148), _data);
+		ennemi* temp = new ennemi(40, 8, Vector2f(320 * (i + 1), 60 * (i + 1)), _data);
 		_ennemis.push_back(temp);
 		//delete temp;
 	}
@@ -177,12 +176,18 @@ void gameState::update(float dt)
 		_background.setPosition(_player->getX(), _player->getY() + 64);
 
 		if (_collision.checkSpriteCollision(_player->getSprite(), 1.0f, _trigger, 1)) {
+			//compte score
+			for (int i = 0; i < _ennemis.size(); i++)
+			{
+				if (!_ennemis[i]->estVivant())
+					_score++;
+			}
 			_gameState = bossFight;
 		}
 	}
 	else if (_gameState == gameStates::bossFight) 
 	{
-		_data->machine.addState(stateRef(new bossFightState(_data)));
+		_data->machine.addState(stateRef(new bossFightState(_data, _score)));
 	}
 
 
@@ -213,7 +218,8 @@ void gameState::update(float dt)
 		{
 			if (_collision.checkSpriteCollision(_ennemis[i]->getSprite(), 0.6f, (*it).balle, 1))
 			{
-				_ennemis[i]->touche(5000);
+				_ennemis[i]->touche(1);
+
 				it->live = false;
 			}
 		}
@@ -303,7 +309,7 @@ void gameState::update(float dt)
 		//std::cout << "enemi no :" << i << ": " << _ennemis[i]->getVectPosition().x << "xay : " << _ennemis[i]->getVectPosition().y << std::endl;
 	}
 	
-	_boss->setBossTexture();
+	//_boss->setBossTexture();
 }
 
 
@@ -323,7 +329,7 @@ void gameState::draw(float dt) const
 	
 	_player->draw();
 
-	_boss->draw();
+	//_boss->draw();
 
 	_balle->draw();
 

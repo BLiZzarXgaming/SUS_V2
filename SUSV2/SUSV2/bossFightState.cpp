@@ -1,13 +1,14 @@
 ﻿#include "bossFightState.h"
 #include <iostream>
 
-bossFightState::bossFightState(gameDataRef data) : _data(data)
+bossFightState::bossFightState(gameDataRef data, int score) : _data(data), _score(score)
 {
 	_player = nullptr;
 	_gameState = gameStates::ready;
 	_hud = nullptr;
 	_boss = nullptr;
 	_balle = nullptr;
+	_score = score;
 }
 
 bossFightState::~bossFightState() {
@@ -17,7 +18,6 @@ bossFightState::~bossFightState() {
 	delete _boss;
 	delete _balle;
 }
-
 
 void bossFightState::init()
 {
@@ -45,16 +45,21 @@ void bossFightState::init()
 	_boss = new boss(_data);
 
 	_hud = new Hud(_data);
-
+	_balle = new bullet(_data);
+	_data->assets.loadTexture("bullet", BULLET_FILEPATH);
 	_map = new gameMap(_data, 1, -64, 29);
-
+	
 	_boss->setTypeAttaque(0);
-	
 	_boss->setBossTexture();
-	_boss->setSpriteCorpsPos(196, 0);
 	
+	
+
+	_boss->setSpriteCorpsPos(176, 21);
+	_boss->setSpriteBrasPos(72, 0);
+	_boss->setSpriteTetePos(104, -82);
 
 	_collidingWallID = 0;
+	_lastShot.Zero;
 }
 
 //fen�tre qui reste ouverte tant qu�elle n�est pas ferm�e
@@ -110,7 +115,6 @@ void bossFightState::handleInput()
 		}
 	}
 
-	//permet de mettre a 0 les mouvements hors du polling
 	if (!Keyboard::isKeyPressed(Keyboard::W) && !Keyboard::isKeyPressed(Keyboard::S))
 	{
 		_player->setDirectionEnumHB(directionEnumHB::nohb);
@@ -123,6 +127,17 @@ void bossFightState::handleInput()
 		_player->setDirectionEnumGD(directionEnumGD::nogd);
 		_player->noMoveRight();
 		_player->noMoveLeft();
+	}
+
+	if (Mouse::isButtonPressed(Mouse::Left)) {	//tirer avec clique gauche
+		if (_dureeJeu.asMilliseconds() - _lastShot.asMilliseconds() > 250)
+		{
+			_balle->tirer(_player->getVectPosition(), _posSourisJeu);
+			_lastShot = _dureeJeu;
+		}
+			
+
+		//cout << "duree: " << _dureeJeu.asMilliseconds() << "  last: " << 
 	}
 }
 //aucune update
@@ -140,7 +155,11 @@ void bossFightState::update(float dt)
 	}
 	//METTRE LE CODE EN DESSOUS DANS LE IF() DU PLAYING LORSQUE LE MENU METTERA LE GAMESTATE A PLAYING
 
+	//  le temps écoulé entre deux frames pis se remet à zéro
+	_variationTemps = _clock.restart();
 
+	// additionne le temps total du jeu (intéressant pour des statistiques)
+	_dureeJeu += _variationTemps;
 
 	// Position de la souris dans le jeu
 	_posSourisJeu = _data->window.mapPixelToCoords(
@@ -149,6 +168,20 @@ void bossFightState::update(float dt)
 	_player->setPosViseur(_posSourisJeu);
 	_player->update(dt);
 
+	_balle->update(dt);
+
+	_boss->setTypeAttaque(2);
+	_boss->setBossTexture();
+
+	for (list<balleEtDir>::iterator it = _balle->getBulletSprites().begin(); it != _balle->getBulletSprites().end(); it++)
+		if (_collision.checkSpriteCollision(_boss->getSpriteTete(), 0.8f, it->balle, 1))
+		{
+			_gameState = gameStates::gameWin;
+			it->live = false;
+		}
+	if (_gameState == gameStates::gameWin) {
+			_data->machine.addState(stateRef(new gameWinState(_data, _score)), true);
+	}
 
 	for (int i = 0; i < _map->getWalls().size(); i++)
 		if (_collision.checkSpriteCollision(_player->getSprite(), 0.6f, _map->getWalls().at(i), 1)) {
@@ -178,28 +211,6 @@ void bossFightState::update(float dt)
 			_player->setCanMove(true);
 		}
 
-
-
-	//if (_player->getDirectionEnumHB() == directionEnumHB::haut)
-	//	cout << "haut  ";
-	//if (_player->getDirectionEnumHB() == directionEnumHB::bas)
-	//	cout << "bas   ";
-	//if (_player->getDirectionEnumHB() == directionEnumHB::nohb)
-	//	cout << "no    ";
-	//if (_player->getDirectionEnumGD() == directionEnumGD::gauche)
-	//	cout << "gauche";
-	//if (_player->getDirectionEnumGD() == directionEnumGD::droite)
-	//	cout << "droite";
-	//if (_player->getDirectionEnumGD() == directionEnumGD::nogd)
-	//	cout << "no    ";
-
-	//cout << "  canMove: " << _player->getCanMove() << "   " << endl;
-
-	//if (_player->getY() > 150)		//fait en sorte que le background ne descende pas lorsque le joueur est bas dans la map
-		//_background.setPosition(_player->getX(), 150);
-	//else
-
-
 	//_hud->setBalle(_player.getballe());  //RAJOUTER QUE L'ON PEUT ALLER CHERCHER LE NOMBRE DE BALLES
 	_hud->updateVie(_player->getVie());
 	_hud->setPosition(Vector2f(_player->getX() + 75, _player->getY() + 54));
@@ -219,5 +230,6 @@ void bossFightState::draw(float dt) const
 	_player->draw();
 	_boss->draw();
 	_hud->draw();
+	_balle->draw();
 	_data->window.display();	//affiche la frame
 }

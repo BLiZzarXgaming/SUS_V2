@@ -135,6 +135,11 @@ void player::setDirectionEnumGD(int dir)
 	_directionEnumGD = dir;
 }
 
+void player::setScore(int score)
+{
+	_score = score;
+}
+
 double player::getY()const
 {
 	return _positionJoueur.y;
@@ -223,6 +228,11 @@ int player::getDirectionEnumGD() const
 bool player::getCanMove() const
 {
 	return _canMove;
+}
+
+int player::getScore() const
+{
+	return _score;
 }
 
 void player::noMoveDown()

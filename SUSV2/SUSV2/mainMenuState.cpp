@@ -22,8 +22,8 @@ void mainMenuState::init()
 	
 
 	// set les bouttons
-	setBoutton(Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4), "UN JOUEUR");
-	setBoutton(Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4 + 100), "COOP (SINGLE V2)"); // le mode coop pas possible
+	setBoutton(Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4), "JOUER");
+	setBoutton(Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4 + 100), "BOSS FIGHT"); // le mode coop pas possible
 	setBoutton(Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4 + 215), "STATS");
 	setBoutton(Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4 + 315), "CREDITS");
 	setBoutton(Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4 + 415), "COMMENT JOUER");
@@ -60,10 +60,10 @@ void mainMenuState::handleInput()
 					switch (getBouttonChoisi()) // prend l'index du boutton choisi
 					{
 					case 0: //solo
-						_data->machine.addState(stateRef(new bossFightState(_data)));
+						_data->machine.addState(stateRef(new gameState(_data)));
 						break;
 					case 1: // coop
-						_data->machine.addState(stateRef(new gameState(_data)));
+						_data->machine.addState(stateRef(new bossFightState(_data, 0)));
 						break;
 					case 2: // stats
 						_data->machine.addState(stateRef(new statsState(_data)));

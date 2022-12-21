@@ -89,9 +89,9 @@ void boss::update(float dtEnSeconde)
 
 	_spriteCorps.setOrigin(_spriteCorps.getGlobalBounds().width / 2, _spriteCorps.getGlobalBounds().width / 2); //changer ca ?
 
-	_spriteCorps.setPosition(_positionBoss);
-	_spriteTete.setPosition(_positionBoss);
-	_spriteBras.setPosition(_positionBoss);
+	//_spriteCorps.setPosition(_positionBoss);
+	//_spriteTete.setPosition(_positionBoss);
+	//_spriteBras.setPosition(_positionBoss);
 
 	_tempsAnimation += dtEnSeconde; // ajoute le temps passé au temps de l'animation
 
@@ -153,8 +153,22 @@ void boss::attaqueDrone(IntRect rectSprite, IntRect rectSpriteBras) {
 }
 
 void boss::attaqueLaser(IntRect rectSprite, IntRect rectSpriteBras) {
-	if (_tempsAnimation >= _delaisEntreFrame && _frameActuelTete < _nbrNormalImage)		//fait toute les sprites de l'attaque
-		_frameActuelTete++;
+	if (_tempsAnimation >= _delaisEntreFrame && _frameActuelTete < _nbrNormalImage)
+	{
+		
+		if (_frameActuelTete == 7)
+		{
+			_frameActuelTete--;
+			_frameActuel--;
+		}
+		else
+		{
+			_frameActuelTete++;
+			_tempsAnimation = 0;
+		}
+		
+	}		//fait toute les sprites de l'attaque
+		
 	else if (_tempsAnimation >= _delaisEntreFrame) {		//fait en sorte de boucler les deux derniere frames de l'attaque + le laser
 		_frameActuelTete--;
 		_frameActuel--;
@@ -162,11 +176,12 @@ void boss::attaqueLaser(IntRect rectSprite, IntRect rectSpriteBras) {
 	if (_frameActuelTete == 7)
 		_frameActuel = 1;
 
-	_tempsAnimation = 0;
+	cout << "temps anim: " << _tempsAnimation << "  delai: " << _delaisEntreFrame << "  frame " << _frameActuelTete << endl;
 
-	rectSprite.top = 80;
-	rectSprite.left = _frameActuel * 144;
+	rectSprite.top = 160; //80
+	rectSprite.left = _frameActuelTete * 144;
 	_spriteTete.setTextureRect(rectSprite);
+	//cout << _tempsAnimation << endl;
 }
 
 void boss::attaqueMissile(IntRect rectSprite, IntRect rectSpriteBras) {

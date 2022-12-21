@@ -1,5 +1,4 @@
 ﻿#pragma once
-
 #include <SFML/Graphics.hpp>
 #include "DEFINITIONS.hpp"
 #include "game.h"
@@ -14,6 +13,8 @@
 #include "boss.h"
 #include "collision.h"
 #include "fade.h"
+#include "gameWinState.h"
+
 
 using namespace sf;
 using namespace std;
@@ -30,8 +31,12 @@ private:
 	boss* _boss;
 
 	Clock _clock;
+	Time _variationTemps;
+	Time _dureeJeu;
+	Time _lastShot;
 
 	int _gameState;
+	int _score;
 
 	sf::Vector2f _posSourisJeu;
 	sf::View _viewJoueur;
@@ -49,7 +54,7 @@ private:
 
 
 public:
-	bossFightState(gameDataRef data);
+	bossFightState(gameDataRef data, int score);
 	~bossFightState();
 	void init();
 	void handleInput();

@@ -25,7 +25,7 @@
 #define PLAYER_HEALTH_FILEPATH "Ressources/res/SUS_Player_healthbar.png"
 
 
-#define NBR_ENNEMI_MAX 1
+#define NBR_ENNEMI_MAX 5
 #define ENNEMI_SPRITESHEET_FILEPATH_VIVANT "ressources/images/ennemi.png"
 #define ENNEMI_SPRITESHEET_FILEPATH_MORT "ressources/images/ennemiemort.png"
 #define BOSS_SPRITESHEET_FILEPATH "Ressources/res/SUS_Boss_Spritesheet.png"
@@ -37,7 +37,8 @@ enum gameStates {
 	ready,
 	playing,
 	gameOver,
-	bossFight
+	bossFight,
+	gameWin
 };
 
 enum directionEnumHB {

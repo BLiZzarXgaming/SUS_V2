@@ -26,6 +26,7 @@ private:
 	int _nbrBalleReste;
 	int _balleActuel;
 	bool _canMove;
+	int _score;
 
 	sf::Sprite _sprite;
 	sf::Texture _playerTexture;
@@ -71,6 +72,7 @@ public:
 	void setCanMove(bool);
 	void setDirectionEnumHB(int); //haut bas
 	void setDirectionEnumGD(int); //gauche droite
+	void setScore(int);
 
 	double getVie()const;
 	double getMaxVie() const;
@@ -87,6 +89,7 @@ public:
 	int getDirectionEnumHB()const;
 	int getDirectionEnumGD()const;
 	bool getCanMove()const;
+	int getScore()const;
 
 	void moveUp();
 	void moveDown();

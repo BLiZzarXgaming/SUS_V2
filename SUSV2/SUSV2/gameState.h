@@ -18,6 +18,7 @@
 #include "collision.h"
 #include "fade.h"
 #include "bossFightState.h"
+#include "gameOverState.h"
 
 using namespace sf;
 using namespace std;
@@ -40,6 +41,8 @@ private:
 
 	int _gameState;
 
+	int _score;
+
 	sf::Vector2f _posSourisJeu;
 	sf::View _viewJoueur;
 
@@ -57,6 +60,8 @@ private:
 	collision _collision;
 
 	std::vector<ennemi*> _ennemis;
+
+	boss* _boss;
 
 
 public:
