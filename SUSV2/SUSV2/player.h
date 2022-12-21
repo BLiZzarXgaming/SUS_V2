@@ -34,11 +34,10 @@ private:
 	sf::Texture _textViseur;
 	sf::Sprite _viseur;
 
-	const int _nbrImageDroite = 7;
-	const int _nbrImageGauche = 7;
-	const int _nbrImageHaut = 4;
-	const int _nbrImageBas = 4;
+	const int _nbrImageDroiteetGauche = 7;
+	const int _nbrImageHautetBas = 4;
 	int _frameActuel;
+	
 	const double _delaisEntreFrame = 0.1; // le delais entre les animations
 	double _tempsAnimation;				  // le temps que l'animation dure
 
@@ -103,7 +102,6 @@ public:
 	void setPlayerTexture();
 
 	bool collisionMur();
-	void setHud();
 
 	void reload();
 
