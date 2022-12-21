@@ -48,3 +48,8 @@ void gameMap::draw()const
 	for (int i = 0; i < _mapSpritesSol.size(); i++)
 		_data->window.draw(_mapSpritesSol.at(i));
 }
+
+const vector<Sprite>& gameMap::getWalls() const
+{
+	return _mapSpritesMur;
+}

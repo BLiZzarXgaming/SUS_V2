@@ -116,7 +116,16 @@ void gameState::update(float dt)
 	_player->setPosViseur(_posSourisJeu);
 	_player->update(dt);
 
-	cout << _player->getX() << "   " << _player->getY() << endl;
+	for (int i = 0; i < _map->getWalls().size(); i++)
+		if (_collision.checkSpriteCollision(_player->getSprite(), _map->getWalls().at(i))) {
+			_player->setPos(_player->getMemoirePos());
+			_player->setCanMove(false);
+		}
+		else if (i == 0) {
+			_player->setCanMove(true);
+			_player->cycleMemoirePos();
+		}
+	//cout << _player->getX() << "   " << _player->getY() << endl;
 
 	if (_player->getY() > 150)		//fait en sorte que le background ne descende pas lorsque le joueur est bas dans la map
 		_background.setPosition(_player->getX(), 150);
@@ -126,6 +135,8 @@ void gameState::update(float dt)
 	//_hud->setBalle(_player.getballe());  //RAJOUTER QUE L'ON PEUT ALLER CHERCHER LE NOMBRE DE BALLES
 	_hud->updateVie(_player->getVie());
 	_hud->setPosition(Vector2f(_player->getX() +75, _player->getY() +54));
+
+	
 
 	//-------JUSQU'ICI---------------------------------------------------
 }

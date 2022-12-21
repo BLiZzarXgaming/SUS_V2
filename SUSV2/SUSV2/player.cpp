@@ -13,6 +13,7 @@ player::player(gameDataRef data) : _data(data) {
 	_tempsAnimation = 0;
 	_balleActuel = 0;
 	_nbrBalleReste = 0;
+	_canMove = true;
 }
 
 player::~player() {
@@ -69,6 +70,12 @@ void player::setPos(double posX, double posY, bool direction) {
 	setDir(direction);
 }
 
+void player::setPos(sf::Vector2f pos)
+{
+	setX(pos.x);
+	setY(pos.y);
+}
+
 void player::setPosViseur(sf::Vector2f posViseur)
 {
 	_posViseur = posViseur;
@@ -102,6 +109,20 @@ void player::setHitboxPos(sf::Vector2f pos)
 {
 	sf::FloatRect r(pos.x, pos.y+2, 16, 5);
 	_hitbox = r;
+}
+
+// A call dans update de gameState
+void player::cycleMemoirePos()
+{
+	_memoirePos.push(_positionJoueur);
+
+	if (_memoirePos.size() > 8)
+		_memoirePos.pop();
+}
+
+void player::setCanMove(bool can)
+{
+	_canMove = can;
 }
 
 double player::getY()const
@@ -174,6 +195,11 @@ sf::Vector2f player::getVectPosition()
 	return _positionJoueur;
 }
 
+sf::Vector2f player::getMemoirePos() const
+{
+	return _memoirePos.front();
+}
+
 void player::noMoveDown()
 {
 	_bas = false;
@@ -210,7 +236,8 @@ void player::update(float dtEnSeconde)
 		_positionJoueur.x += _speed * dtEnSeconde;
 	}
 
-	_sprite.setPosition(_positionJoueur);
+	if (_canMove)
+		_sprite.setPosition(_positionJoueur);
 
 	_tempsAnimation += dtEnSeconde; // ajoute le temps passé au temps de l'animation
 
