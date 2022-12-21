@@ -8,6 +8,7 @@ struct balleEtDir {
 	Sprite balle;
 	double distX;
 	double distY;
+	bool live;
 };
 
 class bullet

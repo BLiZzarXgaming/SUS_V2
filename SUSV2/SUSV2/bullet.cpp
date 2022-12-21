@@ -13,7 +13,7 @@ bullet::~bullet()
 void bullet::draw()
 {
 	for (list<balleEtDir>::iterator it = _bulletSprites.begin(); it != _bulletSprites.end(); it++)
-		_data->window.draw((*it).balle);
+		_data->window.draw(it->balle);
 }
 
 void bullet::tirer(sf::Vector2f positionDepart, sf::Vector2f positionVise)
@@ -29,14 +29,13 @@ void bullet::tirer(sf::Vector2f positionDepart, sf::Vector2f positionVise)
 	// le gradient
 	float gradient = (positionDepart.x - positionVise.x) / (positionDepart.y - positionVise.y);
 
-
 	if (gradient < 0)
 	{
 		gradient *= -1;
 	}
 
 	// Calcule le ratio entre x et y
-	float ratioXY = 1000 / (1 + gradient);
+	float ratioXY = 600 / (1 + gradient);
 
 	// Set la vitesse horizontal et vertical
 	bulletTemp.distY = ratioXY;
@@ -60,8 +59,16 @@ list<balleEtDir>& bullet::getBulletSprites()
 
 void bullet::update(float dt)
 {
+	list<balleEtDir>::iterator toRemove = _bulletSprites.begin();
+
 	for (list<balleEtDir>::iterator it = _bulletSprites.begin(); it != _bulletSprites.end(); it++)
-		(*it).balle.setPosition((*it).balle.getPosition().x + (*it).distX * dt,
-			(*it).balle.getPosition().y + (*it).distY * dt);
-		//it->setPosition(it->getPosition().x + _distX * dt, it->getPosition().y + _distY * dt);
+	{
+		if (it->live)
+			it->balle.setPosition((*it).balle.getPosition().x + it->distX * dt, it->balle.getPosition().y + it->distY * dt);
+		else
+		{
+			_bulletSprites.erase(it);
+			break;
+		}		
+	}
 }

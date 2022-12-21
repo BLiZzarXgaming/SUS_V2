@@ -243,9 +243,9 @@ void player::noMoveLeft()
 void player::update(float dtEnSeconde)
 {
 	if ((_haut && _droite) || (_haut && _gauche) || (_bas && _droite) || (_bas && _gauche)) //Permet de ne pas courrir 2x plus vite en diagonal
-		_speed = 300; //normalement 50
+		_speed = 50; //normalement 50
 	else
-		_speed = 300; //normalement 80
+		_speed = 80; //normalement 80
 
 	_sprite.setOrigin(_sprite.getGlobalBounds().width / 2, _sprite.getGlobalBounds().width / 2); // permet de centrer l'ennemi
 	if ((_haut && !_bas) || (!_canMove && getDirectionEnumHB() == directionEnumHB::bas)) {

@@ -122,8 +122,6 @@ void gameState::handleInput()
 			if (Keyboard::isKeyPressed(Keyboard::Escape)) {
 				_data->window.close();
 			}
-
-			
 		}
 	}
 
@@ -186,10 +184,19 @@ void gameState::update(float dt)
 
 	_balle->update(dt);
 
+	
+	for (list<balleEtDir>::iterator it = _balle->getBulletSprites().begin(); it != _balle->getBulletSprites().end(); it++)
+		for (int i = 0; i < _ennemis.size(); i++)
+		{
+			if (_collision.checkSpriteCollision(_ennemis[i]->getSprite(), 0.6f, (*it).balle, 1))
+			{
+				_ennemis[i]->touche(5000);
+				it->live = false;
+			}
+		}
 
 	for (int i = 0; i < _map->getWalls().size(); i++) {
 
-	
 		if (_collision.checkSpriteCollision(_player->getSprite(), 0.6f, _map->getWalls().at(i), 1)) {
 			_player->setCanMove(false);
 			_collidingWallID = 1 + _map->getWalls().at(i).getTextureRect().left / 32;
@@ -264,17 +271,15 @@ void gameState::update(float dt)
 
 	for (int i = 0; i < _ennemis.size(); i++)
 	{
-		_ennemis[i]->update(dt, _player->getVectPosition());
+		if (_ennemis[i]->estVivant())
+			_ennemis[i]->update(dt, _player->getVectPosition());
 
-		std::cout << "enemi no :" << i << ": " << _ennemis[i]->getVectPosition().x << "xay : " << _ennemis[i]->getVectPosition().y << std::endl;
+		//std::cout << "enemi no :" << i << ": " << _ennemis[i]->getVectPosition().x << "xay : " << _ennemis[i]->getVectPosition().y << std::endl;
 	}
 	
 	_boss->setBossTexture();
 }
-	
 
-	//-------JUSQU'ICI---------------------------------------------------
-}
 
 //clear, dessine le background et display la fenetre. (dt neest pas utilise ici)
 void gameState::draw(float dt) const
