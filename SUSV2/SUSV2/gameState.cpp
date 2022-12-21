@@ -41,12 +41,14 @@ void gameState::init()
 
 	_data->assets.loadTexture("player healthbar", PLAYER_HEALTH_FILEPATH);
 
+	_data->assets.loadTexture("bullet", BULLET_FILEPATH);
+
+	_balle = new bullet(_data);
 	_hud = new Hud(_data);
-	
 	_map = new gameMap(_data);
 
 	_collidingWallID = 0;
-
+	_lastShot.Zero;
 }
 
 //fen�tre qui reste ouverte tant qu�elle n�est pas ferm�e
@@ -86,9 +88,7 @@ void gameState::handleInput()
 			else
 				_player->noMoveRight();
 
-			if (Mouse::isButtonPressed(Mouse::Left)) {	//tirer avec clique gauche
-
-			}
+			
 
 			if (Keyboard::isKeyPressed(Keyboard::R)) {	//recharge avec R
 				_player->reload();
@@ -116,6 +116,17 @@ void gameState::handleInput()
 		_player->noMoveRight();
 		_player->noMoveLeft();
 	}
+
+	if (Mouse::isButtonPressed(Mouse::Left)) {	//tirer avec clique gauche
+		if (_dureeJeu.asMilliseconds() - _lastShot.asMilliseconds() > 250)
+		{
+			_balle->tirer(_player->getVectPosition(), _posSourisJeu);
+			_lastShot = _dureeJeu;
+		}
+			
+
+		//cout << "duree: " << _dureeJeu.asMilliseconds() << "  last: " << 
+	}
 }
 //aucune update
 void gameState::update(float dt)
@@ -132,6 +143,12 @@ void gameState::update(float dt)
 
 	//METTRE LE CODE EN DESSOUS DANS LE IF() DU PLAYING LORSQUE LE MENU METTERA LE GAMESTATE A PLAYING
 
+	//  le temps écoulé entre deux frames pis se remet à zéro
+	_variationTemps = _clock.restart();
+
+	// additionne le temps total du jeu (intéressant pour des statistiques)
+	_dureeJeu += _variationTemps;
+
 	_viewJoueur.setCenter(_player->getPosition().left + _player->getPosition().width / 2,
 		_player->getPosition().top + _player->getPosition().height / 2);
 
@@ -141,6 +158,8 @@ void gameState::update(float dt)
 
 	_player->setPosViseur(_posSourisJeu);
 	_player->update(dt);
+
+	_balle->update(dt);
 
 
 	for (int i = 0; i < _map->getWalls().size(); i++)
@@ -208,6 +227,7 @@ void gameState::draw(float dt) const
 	_data->window.draw(_background);
 	_map->draw();
 	_player->draw();
+	_balle->draw();
 	_hud->draw();
 	
 	_data->window.display();	//affiche la frame
