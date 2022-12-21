@@ -20,6 +20,9 @@ gameState::~gameState() {
 
 void gameState::init()
 {
+	//active le random 
+	srand(time(NULL));
+
 	_data->assets.loadTexture("player sprite sheet", PLAYER_SPRITESHEET_FILEPATH);
 	_player = new player(_data);
 
@@ -47,6 +50,13 @@ void gameState::init()
 
 	_collidingWallID = 0;
 
+
+	// pour ennemi les textures
+	_data->assets.loadTexture("ennemi sprite sheet vivant", ENNEMI_SPRITESHEET_FILEPATH_VIVANT);
+	_data->assets.loadTexture("ennemi sprite sheet mort", ENNEMI_SPRITESHEET_FILEPATH_MORT);
+
+	ennemi* temp = new ennemi(30, 10, Vector2f(64, 148), _data);
+	_ennemis.push_back(temp);
 }
 
 //fen�tre qui reste ouverte tant qu�elle n�est pas ferm�e
@@ -143,7 +153,9 @@ void gameState::update(float dt)
 	_player->update(dt);
 
 
-	for (int i = 0; i < _map->getWalls().size(); i++)
+	for (int i = 0; i < _map->getWalls().size(); i++) {
+
+	
 		if (_collision.checkSpriteCollision(_player->getSprite(), 0.6f, _map->getWalls().at(i), 1)) {
 			_player->setCanMove(false);
 			_collidingWallID = 1 + _map->getWalls().at(i).getTextureRect().left / 32;
@@ -171,6 +183,39 @@ void gameState::update(float dt)
 			_player->setCanMove(true);
 		}
 
+		
+		if (_collision.checkSpriteCollision(_ennemis[0]->getSprite(), 0.6f, _map->getWalls().at(i), 1)) {
+			
+			_collidingWallID = 1 + _map->getWalls().at(i).getTextureRect().left / 32;
+			if (_collidingWallID == 5 ||
+				_collidingWallID == 17 ||
+				_collidingWallID == 18 ||
+				_collidingWallID == 19 ||
+				_collidingWallID == 20 ||
+				_collidingWallID == 11 ||
+				_collidingWallID == 12 ||
+				_collidingWallID == 15 ||
+				_collidingWallID == 16)
+			{
+				_ennemis[0]->moveDown(dt);
+			}
+
+			else if (_collidingWallID == 7)
+				_ennemis[0]->moveRight(dt);
+			else if (_collidingWallID == 6)
+				_ennemis[0]->moveLeft(dt);
+			else
+				_ennemis[0]->moveUp(dt);
+			_ennemis[0]->setMove(false);
+			}
+		else if (i == 0) {
+			_ennemis[0]->setMove(true);
+
+		}
+		
+
+
+	}
 	//if (_player->getDirectionEnumHB() == directionEnumHB::haut)
 	//	cout << "haut  ";
 	//if (_player->getDirectionEnumHB() == directionEnumHB::bas)
@@ -194,7 +239,7 @@ void gameState::update(float dt)
 	//_hud->setBalle(_player.getballe());  //RAJOUTER QUE L'ON PEUT ALLER CHERCHER LE NOMBRE DE BALLES
 	_hud->updateVie(_player->getVie());
 	_hud->setPosition(Vector2f(_player->getX() +75, _player->getY() +54));
-
+	_ennemis[0]->update(dt, _player->getVectPosition());
 	
 
 	//-------JUSQU'ICI---------------------------------------------------
@@ -207,6 +252,7 @@ void gameState::draw(float dt) const
 	_data->window.setView(_viewJoueur);
 	_data->window.draw(_background);
 	_map->draw();
+	_data->window.draw(_ennemis[0]->getSprite());
 	_player->draw();
 	_hud->draw();
 	
