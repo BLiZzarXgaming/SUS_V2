@@ -5,12 +5,14 @@
 #include "game.h"
 #include "state.hpp"
 #include "player.h"
+#include "bullet.h"
 #include <SFML/Audio.hpp>
 #include <iostream>
 #include "state.hpp"
 #include "gameMap.h"
 #include "hud.h"
 #include "boss.h"
+#include "collision.h"
 
 using namespace sf;
 using namespace std;
@@ -34,11 +36,18 @@ private:
 	sf::Vector2f _posSourisJeu;
 	sf::View _viewJoueur;
 
-	Music _music;
+	//Music _music;
 
 	gameMap* _map;
+	int _collidingWallID;
 
 	Hud* _hud;
+
+
+	bullet* _balle;
+
+	collision _collision;
+
 
 public:
 	gameState(gameDataRef data);

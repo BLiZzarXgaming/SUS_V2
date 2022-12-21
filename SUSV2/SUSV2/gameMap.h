@@ -18,5 +18,5 @@ private:
 public:
 	gameMap(gameDataRef data);
 	void draw()const;
-	//const vector<Sprite>& getWalls()const;
+	const vector<Sprite>& getWalls()const;
 };

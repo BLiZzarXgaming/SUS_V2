@@ -1,7 +1,24 @@
 #pragma once
+
+#define SCREEN_WIDTH sf::VideoMode::getDesktopMode().width
+#define SCREEN_HEIGHT sf::VideoMode::getDesktopMode().height
 #define LOGO_STATE_SHOW_TIME 3.0
 
-//#define SPLASH_STATE_BACKGROUND_FILEPATH "Ressources/res/SplashBackground.png"
+#define SPLASH_STATE_BACKGROUND_FILEPATH "ressources/images/SUS_Background1.png"
+
+#define BULLET_FILEPATH "ressources/images/balle.png"
+#define MAIN_MENU_STATE_BACKGROUND_FILEPATH "ressources/images/menu_principale.png"
+#define MAIN_FONT_FILEPATH "ressources/fonts/Robota-NonCommercial.otf"
+#define RANGE_BULLET 1200
+#define SPEED_BULLET 300
+
+#define COLOR_TEXT sf::Color::Black
+#define COLOR_BUTTON sf::Color::White
+#define COLOR_ACTUAL_BUTTON sf::Color::Cyan
+#define SIZE_CARACTER_MENU 80
+
+#define CREDIT_BACKGROUND_FILEPATH "ressources/images/credit.png"
+#define COMMENT_JOUER_BACKGROUND_FILEPATH "ressources/images/comment.png"
 
 #define PLAYER_SPRITESHEET_FILEPATH "Ressources/res/SUS_Player_Sheet.png"
 
@@ -15,30 +32,20 @@ enum gameStates {
 	gameOver
 };
 
-enum tileType {
-	sgp1,
-	sgf1,
-	sgp2,
-	sgf2,
-	mbh_,
-	mbd_,
-	mbg_,
-	mbb_,
-	mchg,
-	mchd,
-	mcbg,
-	mcbd,
-	mihd,
-	mihg,
-	mibd,
-	mibg,
-	mmh_,
-	mmb_,
-	fh__,
-	fb__
+enum directionEnumHB {
+	nohb,
+	haut,
+	bas
+};
+
+enum directionEnumGD {
+	nogd,
+	gauche,
+	droite
 };
 
 #define MAP_TILESET_FILEPATH "Ressources/tileset/Sus_Tileset_Flooring.png"
 #define MAP_TILESET_SIZE 32		//grandeur carrée des textures
 #define MAP_MAIN_FILEPATH "Ressources/maps/map_2.txt"
 #define MAIN_BACKGROUND_FILEPATH "Ressources/SUS_Background.png"
+
