@@ -243,9 +243,9 @@ void player::noMoveLeft()
 void player::update(float dtEnSeconde)
 {
 	if ((_haut && _droite) || (_haut && _gauche) || (_bas && _droite) || (_bas && _gauche)) //Permet de ne pas courrir 2x plus vite en diagonal
-		_speed = 50;
+		_speed = 300; //normalement 50
 	else
-		_speed = 80;
+		_speed = 300; //normalement 80
 
 	_sprite.setOrigin(_sprite.getGlobalBounds().width / 2, _sprite.getGlobalBounds().width / 2); // permet de centrer l'ennemi
 	if ((_haut && !_bas) || (!_canMove && getDirectionEnumHB() == directionEnumHB::bas)) {
@@ -300,7 +300,7 @@ void player::setPlayerTexture() {
 
 	if (angle > 135) {      //Gauche
 
-		if (_frameActuel >= _nbrImageGauche - 1 || !mouvement)
+		if (_frameActuel >= _nbrImageDroiteetGauche - 1 || !mouvement)
 		{
 			_frameActuel = 0;
 		}
@@ -318,7 +318,7 @@ void player::setPlayerTexture() {
 
 	if (angle < 135 && angle > 45 && _positionJoueur.y < _posViseur.y) { // Bas
 
-		if (_frameActuel >= _nbrImageBas - 1 || !mouvement)
+		if (_frameActuel >= _nbrImageHautetBas - 1 || !mouvement)
 		{
 			_frameActuel = 1;
 		}
@@ -336,7 +336,7 @@ void player::setPlayerTexture() {
 
 	if (angle < 45) {                                                  // Droite
 
-		if (_frameActuel >= _nbrImageDroite - 1 || !mouvement)
+		if (_frameActuel >= _nbrImageDroiteetGauche - 1 || !mouvement)
 		{
 			_frameActuel = 0;
 		}
@@ -354,7 +354,7 @@ void player::setPlayerTexture() {
 
 	if (angle < 135 && angle > 45 && _positionJoueur.y > _posViseur.y) { // Haut
 
-		if (_frameActuel >= _nbrImageHaut - 1 || !mouvement)
+		if (_frameActuel >= _nbrImageHautetBas - 1 || !mouvement)
 		{
 			_frameActuel = 1;
 		}
@@ -369,11 +369,6 @@ void player::setPlayerTexture() {
 		_sprite.setTextureRect(rectSprite);
 		_vraiDir = Vector2f(-9, -2);
 	}
-}
-
-void player::setHud()
-{
-
 }
 
 void player::reload() {

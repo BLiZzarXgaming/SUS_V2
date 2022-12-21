@@ -1,18 +1,21 @@
 #pragma once
-
+#include <vector>
 #include <SFML/Graphics.hpp>
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>       /* time */
 #include "DEFINITIONS.hpp"
 #include "game.h"
 #include "state.hpp"
-#include "player.h"
 #include "bullet.h"
+#include "player.h"
+#include "ennemi.h"
 #include <SFML/Audio.hpp>
 #include <iostream>
 #include "state.hpp"
 #include "gameMap.h"
 #include "hud.h"
+#include "boss.h"
 #include "collision.h"
-
 
 using namespace sf;
 using namespace std;
@@ -25,7 +28,9 @@ private:
 	gameDataRef _data;
 
 	Sprite _background;					//le sprite pour la background
+	Sprite _trigger;
 	player* _player;
+	boss* _boss;
 
 	Clock _clock;
 	Time _variationTemps;
@@ -48,6 +53,8 @@ private:
 	bullet* _balle;
 
 	collision _collision;
+
+	std::vector<ennemi*> _ennemis;
 
 
 public:
