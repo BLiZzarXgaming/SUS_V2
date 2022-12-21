@@ -24,7 +24,7 @@ Hud::Hud(gameDataRef data) : _data(data)
 	_nbBalle.setCharacterSize(20);
 	_nbBalle.setString("BALLE: 0");
 
-	_spriteVie.setPosition(0, 0);
+	_spriteVie.setPosition(0, 30);
 }
 
 void Hud::setBalle(int nbBalle)

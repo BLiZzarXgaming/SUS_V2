@@ -1,6 +1,6 @@
 #include "gameState.h"
 #include <iostream>
-//le constructeur utilise les : pour initialiser _data avant m�me l�ex�cution du contenu{}
+//le constructeur utilise les : pour initialiser _data avant m�me l execution du contenu{}
 gameState::gameState(gameDataRef data) : _data(data)
 {
 	_player = nullptr;
@@ -55,11 +55,19 @@ void gameState::init()
 	_data->assets.loadTexture("ennemi sprite sheet vivant", ENNEMI_SPRITESHEET_FILEPATH_VIVANT);
 	_data->assets.loadTexture("ennemi sprite sheet mort", ENNEMI_SPRITESHEET_FILEPATH_MORT);
 
-	ennemi* temp = new ennemi(30, 10, Vector2f(64, 148), _data);
-	_ennemis.push_back(temp);
+
+	_ennemis.reserve(NBR_ENNEMI_MAX);
+	// TODO les placer dans la map
+	//rempli le vecteur d'ennemi
+	for (int i = 0; i < NBR_ENNEMI_MAX; i++)
+	{
+		ennemi* temp = new ennemi(40, 10, Vector2f(64, 148), _data);
+		_ennemis.push_back(temp);
+		//delete temp;
+	}
 }
 
-//fen�tre qui reste ouverte tant qu�elle n�est pas ferm�e
+//fenetre qui reste ouverte tant qu�elle n�est pas ferm�e
 void gameState::handleInput()
 {
 	Event event;
@@ -130,11 +138,11 @@ void gameState::handleInput()
 //aucune update
 void gameState::update(float dt)
 {
-	//si ce n�est pas gameOver
+	//si ce n est pas gameOver
 	if (_gameState != gameStates::gameOver) {
 		//rajouter un if qui dit a l'ennemie de se diriger vers le player si il est dans le range
 	}
-	//si c�est playing, on a cliqu�, donc on joue.
+	//si c�est playing, on a clique, donc on joue.
 
 	if (_gameState == gameStates::playing) {
 
@@ -183,76 +191,75 @@ void gameState::update(float dt)
 			_player->setCanMove(true);
 		}
 
-		
-		if (_collision.checkSpriteCollision(_ennemis[0]->getSprite(), 0.6f, _map->getWalls().at(i), 1)) {
-			
-			_collidingWallID = 1 + _map->getWalls().at(i).getTextureRect().left / 32;
-			if (_collidingWallID == 5 ||
-				_collidingWallID == 17 ||
-				_collidingWallID == 18 ||
-				_collidingWallID == 19 ||
-				_collidingWallID == 20 ||
-				_collidingWallID == 11 ||
-				_collidingWallID == 12 ||
-				_collidingWallID == 15 ||
-				_collidingWallID == 16)
-			{
-				_ennemis[0]->moveDown(dt);
-			}
+		for (int j = 0; j < _ennemis.size(); j++)
+		{
+			if (_collision.checkSpriteCollision(_ennemis[j]->getSprite(), 0.6f, _map->getWalls().at(i), 1)) {
 
-			else if (_collidingWallID == 7)
-				_ennemis[0]->moveRight(dt);
-			else if (_collidingWallID == 6)
-				_ennemis[0]->moveLeft(dt);
-			else
-				_ennemis[0]->moveUp(dt);
-			_ennemis[0]->setMove(false);
-			}
-		else if (i == 0) {
-			_ennemis[0]->setMove(true);
+				_collidingWallID = 1 + _map->getWalls().at(i).getTextureRect().left / 32;
+				if (_collidingWallID == 5 ||
+					_collidingWallID == 17 ||
+					_collidingWallID == 18 ||
+					_collidingWallID == 19 ||
+					_collidingWallID == 20 ||
+					_collidingWallID == 11 ||
+					_collidingWallID == 12 ||
+					_collidingWallID == 15 ||
+					_collidingWallID == 16)
+				{
+					_ennemis[j]->moveDown(dt);
+				}
 
+				else if (_collidingWallID == 7)
+					_ennemis[j]->moveRight(dt);
+				else if (_collidingWallID == 6)
+					_ennemis[j]->moveLeft(dt);
+				else
+					_ennemis[j]->moveUp(dt);
+
+				_ennemis[j]->setMove(false);
+			}
+			else if (i == 0) {
+				_ennemis[j]->setMove(true);
+
+			}
 		}
 		
-
-
 	}
-	//if (_player->getDirectionEnumHB() == directionEnumHB::haut)
-	//	cout << "haut  ";
-	//if (_player->getDirectionEnumHB() == directionEnumHB::bas)
-	//	cout << "bas   ";
-	//if (_player->getDirectionEnumHB() == directionEnumHB::nohb)
-	//	cout << "no    ";
-	//if (_player->getDirectionEnumGD() == directionEnumGD::gauche)
-	//	cout << "gauche";
-	//if (_player->getDirectionEnumGD() == directionEnumGD::droite)
-	//	cout << "droite";
-	//if (_player->getDirectionEnumGD() == directionEnumGD::nogd)
-	//	cout << "no    ";
-
-	//cout << "  canMove: " << _player->getCanMove() << "   " << endl;
 
 	if (_player->getY() > 150)		//fait en sorte que le background ne descende pas lorsque le joueur est bas dans la map
 		_background.setPosition(_player->getX(), 150);
 	else
 	_background.setPosition(_player->getVectPosition());
 
-	//_hud->setBalle(_player.getballe());  //RAJOUTER QUE L'ON PEUT ALLER CHERCHER LE NOMBRE DE BALLES
+
 	_hud->updateVie(_player->getVie());
 	_hud->setPosition(Vector2f(_player->getX() +75, _player->getY() +54));
-	_ennemis[0]->update(dt, _player->getVectPosition());
+
+	for (int i = 0; i < _ennemis.size(); i++)
+	{
+		_ennemis[i]->update(dt, _player->getVectPosition());
+
+		std::cout << "enemi no :" << i << ": " << _ennemis[i]->getVectPosition().x << "xay : " << _ennemis[i]->getVectPosition().y << std::endl;
+	}
+	
 	
 
 	//-------JUSQU'ICI---------------------------------------------------
 }
 
-//clear, dessine le background et display la fen�tre. (dt n�est pas utilis� ici)
+//clear, dessine le background et display la fenetre. (dt neest pas utilise ici)
 void gameState::draw(float dt) const
 {
 	_data->window.clear();	//nettoie la fenetre
 	_data->window.setView(_viewJoueur);
 	_data->window.draw(_background);
 	_map->draw();
-	_data->window.draw(_ennemis[0]->getSprite());
+
+	for (int i = 0; i < _ennemis.size(); i++)
+	{
+		_data->window.draw(_ennemis[i]->getSprite());
+	}
+	
 	_player->draw();
 	_hud->draw();
 	

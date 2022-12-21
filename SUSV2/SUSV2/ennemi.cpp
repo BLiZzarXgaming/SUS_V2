@@ -75,8 +75,9 @@ bool ennemi::estVivant()
 
 void ennemi::spawn(sf::Vector2f positionDepart)
 {
-		_position.x = positionDepart.x + rand() % 5;
+		_position.x = positionDepart.x;
 		_position.y = positionDepart.y;
+		_spriteEnnemi.setPosition(_position);
 }
 
 FloatRect ennemi::getPosition()

@@ -24,6 +24,7 @@
 
 #define PLAYER_HEALTH_FILEPATH "Ressources/res/SUS_Player_healthbar.png"
 
+#define NBR_ENNEMI_MAX 10
 #define ENNEMI_SPRITESHEET_FILEPATH_VIVANT "ressources/images/ennemi.png"
 #define ENNEMI_SPRITESHEET_FILEPATH_MORT "ressources/images/ennemiemort.png"
 
