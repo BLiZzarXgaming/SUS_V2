@@ -1,24 +1,29 @@
 #include "game.h"
-#include "gameState.h"
-//#include "splashState.h" //enlever le commentaire lors de l’appel du spashState
+#include "splashState.h" //enlever le commentaire lors de l�appel du spashState
+// � enlever apr�s
+//#include "mainMenuState.h"
+//#include "gameState.h"
 #include <time.h>
 #include <stdlib.h>
 
 
 game::game(int width, int height, string title)
 {
-	_data = make_shared<gameData>(); //création de la game en mémoire dynamique
-	//création de la fenêtre qui changera de contenu selon la state créée ensuite
-	_data->window.create(VideoMode(width, height), title, Style::Fullscreen);
+	_data = make_shared<gameData>(); //cr�ation de la game en m�moire dynamique
+
+	//creation de la fenetre qui changera de contenu selon la state creee ensuite
+	_data->window.create(VideoMode(width, height), title, Style::Fullscreen | Style::Close);
 	_data->window.setFramerateLimit(60);
-	_data->machine.addState(stateRef(new gameState(_data)));
+	
+	//todo cr�ation d�un 1er �tat de jeu (1�re fen�tre)
+	_data->machine.addState(stateRef(new splashState(_data)));
 
 	run();
 }
-//le game loop de tout jeu fonctionne comme suit : on exécute à chaque loop la méthode
-//processStateChanges qui vérifie si on ajoute, on modifie ou on retire une state pour ensuite
-//ajuster le temps passé et exécuter des traitements particuliers à chaque (1/60sec)
-//ces traitements sont gérer par la state machine. Ensuite, on dessine les changements
+//le game loop de tout jeu fonctionne comme suit : on execute a� chaque loop la methode
+//processStateChanges qui verifie si on ajoute, on modifie ou on retire une state pour ensuite
+//ajuster le temps passe et executer des traitements particuliers a� chaque (1/60sec)
+//ces traitements sont gerer par la state machine. Ensuite, on dessine les changements
 void game::run()
 {
 	float newTime, frameTime, interpolation;
@@ -38,13 +43,13 @@ void game::run()
 		
 		accumulator += frameTime;		//accumulator accumule tous les frameTimes
 		
-		while (accumulator >= dt) {		//si on dépasse le temps du frame (1/60 de seconde)
-										//on vérifie les événements et on update la fenêtre
+		while (accumulator >= dt) {		//si on depasse le temps du frame (1/60 de seconde)
+										//on verifie les evenements et on update la fenetre
 			_data->machine.getActiveState()->handleInput();
 			_data->machine.getActiveState()->update(dt);
-			accumulator -= dt;			//on retire dt de l’accumulator pour l’interpolation
+			accumulator -= dt;			//on retire dt de l accumulator pour l interpolation
 		}
-		interpolation = accumulator / dt; //le temps d’exécution de la loop pour le draw
+		interpolation = accumulator / dt; //le temps d execution de la loop pour le draw
 		_data->machine.getActiveState()->draw(interpolation);
 	}
 }

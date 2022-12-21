@@ -6,6 +6,7 @@ gameState::gameState(gameDataRef data) : _data(data)
 	_player = nullptr;
 	_gameState = gameStates::ready;
 	_hud = nullptr;
+	_balle = nullptr;
 	
 }
 
@@ -13,6 +14,7 @@ gameState::~gameState() {
 	delete _player;
 	delete _map;
 	delete _hud;
+	delete _balle;
 }
 
 
@@ -42,6 +44,7 @@ void gameState::init()
 	_hud = new Hud(_data);
 	
 	_map = new gameMap(_data);
+
 	_collidingWallID = 0;
 
 }
@@ -138,6 +141,7 @@ void gameState::update(float dt)
 
 	_player->setPosViseur(_posSourisJeu);
 	_player->update(dt);
+
 
 	for (int i = 0; i < _map->getWalls().size(); i++)
 		if (_collision.checkSpriteCollision(_player->getSprite(), 0.6f, _map->getWalls().at(i), 1)) {
