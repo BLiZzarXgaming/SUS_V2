@@ -1,5 +1,5 @@
 #include "gameWinState.h"
-gameWinState::gameWinState(gameDataRef data, int score)
+gameWinState::gameWinState(gameDataRef data, int score) : _data(data), _score(score)
 {
 	_score = score;
 	cout << _score;

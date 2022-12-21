@@ -288,7 +288,22 @@ void gameState::update(float dt)
 		}
 		
 	}
-
+	for (int i = 0; i < _ennemis.size(); i++)
+	{
+		if (_collision.checkSpriteCollision(_player->getSprite(), 1.0f, _ennemis[i]->getSprite(), 1) 
+			&& _ennemis[i]->estVivant()) {
+			for (int i = 0; i < _ennemis.size(); i++)
+			{
+				if (!_ennemis[i]->estVivant())
+					_score++;
+			}
+			_gameState = gameOver;
+		}
+	}
+	if (_gameState == gameStates::gameOver)
+	{
+		_data->machine.addState(stateRef(new gameOverState(_data, _score)));
+	}
 
 	//if (_player->getY() > 150)		//fait en sorte que le background ne descende pas lorsque le joueur est bas dans la map
 		//_background.setPosition(_player->getX(), 150);
