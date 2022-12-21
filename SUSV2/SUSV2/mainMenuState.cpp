@@ -1,3 +1,10 @@
+/********************************************************************************************/
+/* Auteur      : Louis-Philippe Racette                                                     */
+/* Nom         : mainMenuState.cpp                                                          */
+/* Date        : 21 decembre 2022                                                           */
+/* But         : Affiche un menu avec des bouttons pour changer de state                    */
+/********************************************************************************************/
+
 #include "mainMenuState.h"
 
 //le constructeur utilise les : pour initialiser _data avant meme l execution du contenu
@@ -7,7 +14,8 @@ mainMenuState::mainMenuState(gameDataRef data) : _data(data)
 	_boutton.reserve(6);
 	_texts.reserve(6);
 }
-//load l image du background a l aide du assetManager ds _data et la set au Sprite
+
+//load l image du background a l aide du assetManager ds _data, la set au Sprite et fait les bouttons
 void mainMenuState::init()
 {
 	// pour le background
@@ -22,42 +30,43 @@ void mainMenuState::init()
 	
 
 	// set les bouttons
-	setBoutton(Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4), "JOUER");
-	setBoutton(Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4 + 100), "BOSS FIGHT"); // le mode coop pas possible
+	setBoutton(Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4), "UN JOUEUR");
+	setBoutton(Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4 + 100), "BOSS FIGHT");
 	setBoutton(Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4 + 215), "STATS");
 	setBoutton(Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4 + 315), "CREDITS");
 	setBoutton(Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4 + 415), "COMMENT JOUER");
 	setBoutton(Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4 + 515), "QUITTER");
 }
-//fenetre qui reste ouverte tant qu elle n est pas fermee
+
+// gere tout les inputs du menu
 void mainMenuState::handleInput()
 {
 	Event event;
-	while (_data->window.pollEvent(event))
+	while (_data->window.pollEvent(event))	// regarde tout les evenements
 	{
-		if (event.type == Event::Closed)
+		if (event.type == Event::Closed)	// si on pese sur le x de la fenetre
 			_data->window.close();
-		else if (event.type == Event::KeyPressed) {
+		else if (event.type == Event::KeyPressed) {	// tout les evenements de touche pese
 
-			switch (event.key.code)
+			switch (event.key.code)					// regarde le type de touche
 			{
-			case Keyboard::Escape:
+			case Keyboard::Escape:					// touche escape
 				_data->window.close();
 				break;
 
-			case Keyboard::Up:
+			case Keyboard::Up:						// fleche haut
 
 				//_menuSound.play();
 				moveUp();
 				break;
-			case Keyboard::Down:
+			case Keyboard::Down:					// fleche bas
 				
 				//_menuSound.play();
 				moveDown();
 				break;
 
-			case Keyboard::Enter:				//TODO mettre les bon states
-					switch (getBouttonChoisi()) // prend l'index du boutton choisi
+			case Keyboard::Enter:					// touche enter
+					switch (getBouttonChoisi())		// prend l'index du boutton choisi
 					{
 					case 0: //solo
 						_data->machine.addState(stateRef(new gameState(_data)));
@@ -84,11 +93,12 @@ void mainMenuState::handleInput()
 	}
 }
 
+// udpade les elements du menu
 void mainMenuState::update(float dt)
 {
-	for (int i = 0; i < _boutton.size(); i++)
+	for (int i = 0; i < _boutton.size(); i++)	// boucle tout les bouttons
 	{
-		if (i == _bouttonActuel)
+		if (i == _bouttonActuel)				// si c'est le boutton choisi
 		{
 			_boutton[_bouttonActuel].setFillColor(COLOR_ACTUAL_BUTTON);
 		}
@@ -98,6 +108,7 @@ void mainMenuState::update(float dt)
 		}
 	}
 }
+
 //clear, dessine le background et display la fenetre. (dt n est pas utilise ici)
 void mainMenuState::draw(float dt) const 
 {
@@ -115,7 +126,7 @@ void mainMenuState::draw(float dt) const
 // bouge le boutton choisi de 1 en bas
 void mainMenuState::moveDown()
 {
-	if (_bouttonActuel < _boutton.size() - 1)
+	if (_bouttonActuel < _boutton.size() - 1)	// verifie si on depasse
 	{
 		_bouttonActuel++;
 	}
@@ -129,7 +140,7 @@ void mainMenuState::moveDown()
 // bouge le boutton choisi de 1 en haut
 void mainMenuState::moveUp()
 {
-	if (_bouttonActuel > 0)
+	if (_bouttonActuel > 0)	// verifie si on depasse
 	{
 		_bouttonActuel--;
 	}
@@ -146,7 +157,7 @@ int mainMenuState::getBouttonChoisi()
 	return _bouttonActuel;
 }
 
-// crée un boutton avec un text et un rectangle
+// crÃ©e un boutton avec un text et un rectangle
 void mainMenuState::setBoutton(sf::Vector2f position, std::string message)
 {
 	// le texte du boutton
@@ -163,7 +174,7 @@ void mainMenuState::setBoutton(sf::Vector2f position, std::string message)
 	// le rectangle du boutton
 	RectangleShape rectangle; 
 	rectangle.setSize(Vector2f(text.getGlobalBounds().width + 20, text.getGlobalBounds().height + 20));
-	rectangle.setPosition(position.x - text.getGlobalBounds().width / 2 - 10, position.y + 10);
+	rectangle.setPosition(position.x - text.getGlobalBounds().width / 2 - 10, position.y + 10);	// permet de centrer le boutton horizontalement
 	rectangle.setFillColor(COLOR_BUTTON);
 	_boutton.push_back(rectangle);
 

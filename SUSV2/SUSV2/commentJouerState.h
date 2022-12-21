@@ -1,3 +1,9 @@
+/********************************************************************************************/
+/* Auteur      : Louis-Philippe Racette                                                     */
+/* Nom         : commentJouerState.h                                                        */
+/* Date        : 21 decembre 2022                                                           */
+/* But         : afficher comment jouer et revenir au menu apres                            */
+/********************************************************************************************/
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "DEFINITIONS.hpp"
@@ -15,9 +21,9 @@ private:
 	Sprite _background; //le sprite pour la background
 
 public:
-	commentJouerState(gameDataRef data);
-	void init();
-	void handleInput();
-	void update(float dt);
-	void draw(float dt) const;
+	commentJouerState(gameDataRef data);	// le constructeur
+	void init();							// initialise le state
+	void handleInput();						// gere les entrees
+	void update(float dt);					// update le state (pas utilise)
+	void draw(float dt) const;				// dessine le state dans la fenetre
 };

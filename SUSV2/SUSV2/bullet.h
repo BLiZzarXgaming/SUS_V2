@@ -1,3 +1,10 @@
+/********************************************************************************************/
+/* Auteur      : Louis-Philippe Racette                                                     */
+/* Nom         : bullet.h                                                                   */
+/* Date        : 21 decembre 2022                                                           */
+/* But         : une balle qui vole et se dessine                                           */
+/********************************************************************************************/
+
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "DEFINITIONS.hpp"
@@ -15,6 +22,7 @@ class bullet
 {
 private:
 	gameDataRef _data;
+
 	list<balleEtDir> _bulletSprites;
 	
 public:

@@ -1,13 +1,22 @@
+/********************************************************************************************/
+/* Auteur      : Louis-Philippe Racette                                                     */
+/* Nom         : bullet.cpp                                                                 */
+/* Date        : 21 decembre 2022                                                           */
+/* But         : une balle qui vole et se dessine                                           */
+/********************************************************************************************/
 #include "bullet.h"
 
 using namespace sf;
 
+// construit le bullet
 bullet::bullet(gameDataRef data) : _data(data)
 {
 }
 
+// destructeur du bullet
 bullet::~bullet()
 {
+
 }
 
 void bullet::draw()
@@ -16,6 +25,7 @@ void bullet::draw()
 		_data->window.draw(it->balle);
 }
 
+// tire un bullet dans une direction
 void bullet::tirer(sf::Vector2f positionDepart, sf::Vector2f positionVise)
 {
 	balleEtDir bulletTemp;
@@ -57,6 +67,7 @@ list<balleEtDir>& bullet::getBulletSprites()
 	return _bulletSprites;
 }
 
+// update la balle
 void bullet::update(float dt)
 {
 	list<balleEtDir>::iterator toRemove = _bulletSprites.begin();
@@ -71,4 +82,5 @@ void bullet::update(float dt)
 			break;
 		}		
 	}
+
 }

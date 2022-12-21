@@ -1,5 +1,12 @@
+/********************************************************************************************/
+/* Auteur      : Xavier Caouette, Louis-Philippe Racette									*/
+/* Nom         : player.cpp                                                                 */
+/* Date        : 21 decembre 2022                                                           */
+/* But         : gestion d un joueur et de son affichage									*/
+/********************************************************************************************/
 #include "player.h"
 
+// constructeur
 player::player(gameDataRef data) : _data(data) {
 	_vie = 3;
 	_vieMax = 3;
@@ -16,6 +23,7 @@ player::player(gameDataRef data) : _data(data) {
 	_canMove = true;
 }
 
+// destructeur
 player::~player() {
 	_vie = 0;
 	_positionJoueur.x = 0;
@@ -24,94 +32,95 @@ player::~player() {
 	_damage = 0;
 }
 
+// set la vie
 void player::setVie(int vie) {
 	_vie = vie;
 }
 
-void player::setMaxVie(double vieMax)
-{
-	_vieMax = vieMax;
-}
-
+// enleve une vie
 void player::decVie()
 {
 	_vie--;
 }
 
-void player::setX(double posX) {
-	_positionJoueur.x = posX;
-}
-
-void player::setY(double posY) {
-	_positionJoueur.y = posY;
-}
-
-void player::setDir(bool direction) {
-	_direction = direction;
-}
-
-void player::decFrameInv()
+// set la vie max
+void player::setMaxVie(double vieMax)
 {
-	_frameInv--;
+	_vieMax = vieMax;
 }
 
-void player::setDamage(double damage) {
-	_damage = damage;
-}
-
+// enleve une frame d invincibilite
 void player::setFrameInv(int temps)
 {
 	_frameInv = temps;
 }
 
+// ajoute une frame d invincibilite
+void player::decFrameInv()
+{
+	_frameInv--;
+}
+
+// set la position x du joueur
+void player::setX(double posX) {
+	_positionJoueur.x = posX;
+}
+
+// set la position y du joueur
+void player::setY(double posY) {
+	_positionJoueur.y = posY;
+}
+
+// set la direction du joueur
+void player::setDir(bool direction) {
+	_direction = direction;
+}
+
+// set les degat
+void player::setDamage(double damage) {
+	_damage = damage;
+}
+
+// set la position et la direction
 void player::setPos(double posX, double posY, bool direction) {
 	setX(posX);
 	setY(posY);
 	setDir(direction);
 }
 
+// set la position
 void player::setPos(sf::Vector2f pos)
 {
 	setX(pos.x);
 	setY(pos.y);
 }
 
+// set la position du viseur
 void player::setPosViseur(sf::Vector2f posViseur)
 {
 	_posViseur = posViseur;
 }
 
+// set le reload time
 void player::setReloadTime(int time)
 {
 	_reloadTime = time;
 }
 
-double player::getVie()const {
-	return _vie;
-}
-
+// diminue le reload time
 void player::decReloadTime()
 {
 	_reloadTime--;
 }
 
-double player::getMaxVie() const
-{
-	return _vieMax;
-}
-
-double player::getX()const
-{
-	return _positionJoueur.x;
-}
-
+// set la position de la hit box
 void player::setHitboxPos(sf::Vector2f pos)
 {
 	sf::FloatRect r(pos.x, pos.y+2, 16, 5);
 	_hitbox = r;
 }
 
-// A call dans update de gameState
+// garde en memoire la position anterieur
 void player::cycleMemoirePos()
 {
 	_memoirePos.push(_positionJoueur);
@@ -120,20 +129,49 @@ void player::cycleMemoirePos()
 		_memoirePos.pop();
 }
 
+// set si peut bouger
 void player::setCanMove(bool can)
 {
 	_canMove = can;
 }
 
+// set enum haut bas
 void player::setDirectionEnumHB(int dir)
 {
 	_directionEnumHB = dir;
 }
 
+// set enumgauche droite
 void player::setDirectionEnumGD(int dir)
 {
 	_directionEnumGD = dir;
 }
+
+
+// donne la vie actuelle
+double player::getVie()const {
+	return _vie;
+}
+
+// donne la vie max 
+double player::getMaxVie() const
+{
+	return _vieMax;
+}
+
+// donne les frames d invincibilite
+int player::getFrameInvTime()
+{
+	return _frameInv;
+}
+
+// donne la position x du sprite
+double player::getX()const
+{
+	return _positionJoueur.x;
+}
+
+// donne la position y du sprite
 
 void player::setScore(int score)
 {
@@ -145,111 +183,121 @@ double player::getY()const
 	return _positionJoueur.y;
 }
 
+// donne le sprite
 sf::Sprite player::getSprite() const // pour pouvoir le dessiner
 {
 	return _sprite;
 }
 
+// donne la position en rect
 sf::FloatRect player::getPosition() // pour les collisions
 {
 	return _sprite.getGlobalBounds();
 }
 
+// donne la direction vise
 sf::Vector2f player::getVraiDir()
 {
 	return _vraiDir;
 }
 
+// donne la valeur de reload
 int player::getReloadTime()
 {
 	return _reloadTime;
 }
 
-void player::moveUp()
-{
-	_haut = true;
-}
-
-void player::moveDown()
-{
-	_bas = true;
-}
-
-int player::getFrameInvTime()
-{
-	return _frameInv;
-}
-
-void player::moveRight()
-{
-	_droite = true;
-}
-
+// donne la shape rectangulaire
 sf::FloatRect player::getRectShape()
 {
 	return _hitbox;
 }
 
-void player::moveLeft()
-{
-	_gauche = true;
-}
-
-bool player::collisionMur()
-{
-	return false;
-}
-
-void player::noMoveUp()
-{
-	_haut = false;
-}
-
+// donne la position du joueur coords
 sf::Vector2f player::getVectPosition()
 {
 	return _positionJoueur;
 }
 
+// donne la position du joueur en memoire
 sf::Vector2f player::getMemoirePos() const
 {
 	return _memoirePos.front();
 }
 
+// donne enum haut bas
 int player::getDirectionEnumHB() const
 {
 	return _directionEnumHB;
 }
 
+// donne enum haut bas
 int player::getDirectionEnumGD() const
 {
 	return _directionEnumGD;
 }
 
+// donne si on peut bouger
 bool player::getCanMove() const
 {
 	return _canMove;
 }
 
+// bouge le joueur en haut
+void player::moveUp()
+{
+	_haut = true;
+}
+
+// bouge le joueur en bas
+void player::moveDown()
+{
+	_bas = true;
+}
+
+// bouge le joueur a droite
+void player::moveRight()
+{
+	_droite = true;
+}
+
+// bouge le joueur a gauche
+void player::moveLeft()
+{
+	_gauche = true;
+}
+
+// empeche de bouger en haut
+void player::noMoveUp()
+{
+	_haut = false;
+}
+
+// donne le score
 int player::getScore() const
 {
 	return _score;
 }
 
+// empeche de bouger en bas
 void player::noMoveDown()
 {
 	_bas = false;
 }
 
+// empeche de bouger a droite
 void player::noMoveRight()
 {
 	_droite = false;
 }
 
+// empeche de bouger a gauche
 void player::noMoveLeft()
 {
 	_gauche = false;
 }
 
+// update le joueur
 void player::update(float dtEnSeconde)
 {
 	if ((_haut && _droite) || (_haut && _gauche) || (_bas && _droite) || (_bas && _gauche)) //Permet de ne pas courrir 2x plus vite en diagonal
@@ -257,30 +305,32 @@ void player::update(float dtEnSeconde)
 	else
 		_speed = 80; //normalement 80
 
-	_sprite.setOrigin(_sprite.getGlobalBounds().width / 2, _sprite.getGlobalBounds().width / 2); // permet de centrer l'ennemi
-	if ((_haut && !_bas) || (!_canMove && getDirectionEnumHB() == directionEnumHB::bas)) {
+	_sprite.setOrigin(_sprite.getGlobalBounds().width / 2, _sprite.getGlobalBounds().width / 2);	// permet de centrer l'ennemi
+
+	if ((_haut && !_bas) || (!_canMove && getDirectionEnumHB() == directionEnumHB::bas)) {			// en bas
 		_positionJoueur.y -= _speed * dtEnSeconde;
 		//cout << "  HAUT: " << _haut;
 	}
-	if ((_bas && !_haut) || (!_canMove && getDirectionEnumHB() == directionEnumHB::haut)) {
+	if ((_bas && !_haut) || (!_canMove && getDirectionEnumHB() == directionEnumHB::haut)) {			// en haut
 		_positionJoueur.y += _speed * dtEnSeconde;
 		//cout << "  BAS: " << _bas;
 	}
-	if ((_gauche && !_droite) || (!_canMove && getDirectionEnumGD() == directionEnumGD::droite)) {
+	if ((_gauche && !_droite) || (!_canMove && getDirectionEnumGD() == directionEnumGD::droite)) {	// a droite
 		_positionJoueur.x -= _speed * dtEnSeconde;
 		//cout << "  GAUCHE: " << _gauche;
 	}
-	if ((_droite && !_gauche) || (!_canMove && getDirectionEnumGD() == directionEnumGD::gauche)) {
+	if ((_droite && !_gauche) || (!_canMove && getDirectionEnumGD() == directionEnumGD::gauche)) {	// a gauche
 		_positionJoueur.x += _speed * dtEnSeconde;
 		//cout << "  DOITE: " << _droite;
 	}
 	_sprite.setPosition(_positionJoueur);
 
-	_tempsAnimation += dtEnSeconde; // ajoute le temps passé au temps de l'animation
+	_tempsAnimation += dtEnSeconde; // ajoute le temps passÃ© au temps de l'animation
 
 	setPlayerTexture(); // va updater la texture du joueur
 }
 
+// modifie la texture du joueur
 void player::setPlayerTexture() {
 
 	IntRect rectSprite(0, 0, 32, 32);
@@ -293,7 +343,7 @@ void player::setPlayerTexture() {
 
 	dirVec.x = (dirVec.x) / magSquare;
 
-	//l'angle et le change en degré
+	//l'angle et le change en degrÃ©
 	float angle = std::acos(dirVec.x) * (180 / 3.141);          // 180 ----------- 0           direction angle 
 
 	//regarde si on bouge
@@ -381,6 +431,7 @@ void player::setPlayerTexture() {
 	}
 }
 
+// reload les balles
 void player::reload() {
 	_balleActuel = 0;
 	_nbrBalleReste = 15;
@@ -388,6 +439,7 @@ void player::reload() {
 	setReloadTime(100);
 }
 
+// dessine le joueur
 void player::draw() const
 {
 	_data->window.draw(_sprite);

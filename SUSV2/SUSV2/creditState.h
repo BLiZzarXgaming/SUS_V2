@@ -1,3 +1,9 @@
+/********************************************************************************************/
+/* Auteur      : Louis-Philippe Racette                                                     */
+/* Nom         : creditState.h                                                              */
+/* Date        : 21 decembre 2022                                                           */
+/* But         : afficher les credit et reveien au menu apres                               */
+/********************************************************************************************/
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "DEFINITIONS.hpp"
@@ -16,8 +22,8 @@ private:
 
 public:
 	creditState(gameDataRef data);
-	void init();
-	void handleInput();
-	void update(float dt);
-	void draw(float dt) const;
+	void init();				// initialise le state
+	void handleInput();			// gere les entrees
+	void update(float dt);		// update le state (pas utilise)
+	void draw(float dt) const;	// dessine le state
 };

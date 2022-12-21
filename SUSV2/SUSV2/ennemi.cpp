@@ -1,11 +1,15 @@
+/********************************************************************************************/
+/* Auteur      : Louis-Philippe Racette														*/
+/* Nom         : ennemi.cpp                                                                 */
+/* Date        : 21 decembre 2022                                                           */
+/* But         : Gere un ennemi qui peut se deplacer et interagir avec des sprites			*/
+/********************************************************************************************/
+
 #include "ennemi.h"
 
 using namespace sf;
-// modifier ennemi pour que se soit l'origine de l'ennemi soit au centre
 
-
-// TODO regarder pertinence variable _taille
-// à optimiser pour les textures
+// constructeur sans parametre
 ennemi::ennemi(gameDataRef data) : _data(data)
 {
 	_move = true;
@@ -16,11 +20,14 @@ ennemi::ennemi(gameDataRef data) : _data(data)
 	_position.x = 0;
 	_position.y = 0;
 	_enVie = false;
+
 	_spriteEnnemi.setTexture(_data->assets.getTexture("ennemi sprite sheet vivant"));
 }
 
+// destructeur d ennemi
 ennemi::~ennemi()
 {
+	_move = true;
 	_speed = 0;
 	_pv = 0;
 	_taille.x = 0;
@@ -30,12 +37,13 @@ ennemi::~ennemi()
 	_enVie = false;
 }
 
+// constructeur avec parametre
 ennemi::ennemi(int speed, double pv, sf::Vector2f positionDepart, gameDataRef data) : _data(data)
 {
 
 	_move = true;
 	_spriteEnnemi.setTexture(_data->assets.getTexture("ennemi sprite sheet vivant"));
-	_speed = speed - rand() % 15;//speed;
+	_speed = speed - rand() % 15;	//speed modifie pour pas qu'il soit tous pareil
 	_pv = pv;
 	_taille.x = 0;
 	_taille.y = 0;
@@ -46,14 +54,16 @@ ennemi::ennemi(int speed, double pv, sf::Vector2f positionDepart, gameDataRef da
 	_enVie = true;
 	_position.x = 0;
 	_position.y = 0;
-	spawn(positionDepart);
+
+	spawn(positionDepart);	// place dans la fenetre
 }
 
+// calcule la vie apres un hit
 bool ennemi::touche(double damage)
 {
 	_pv -= damage;
 
-	if (_pv <= 0)
+	if (_pv <= 0)		// si mort
 	{
 		_enVie = false;
 		_spriteEnnemi.setTexture(_data->assets.getTexture("ennemi sprite sheet mort"));
@@ -68,11 +78,13 @@ bool ennemi::touche(double damage)
 	return false;
 }
 
-bool ennemi::estVivant()
+// verifie si vivant
+bool ennemi::estVivant() const
 {
 	return _enVie;
 }
 
+// place un ennemi dans la fenetre
 void ennemi::spawn(sf::Vector2f positionDepart)
 {
 		_position.x = positionDepart.x;
@@ -80,16 +92,19 @@ void ennemi::spawn(sf::Vector2f positionDepart)
 		_spriteEnnemi.setPosition(_position);
 }
 
+// donne la position en rectangle
 FloatRect ennemi::getPosition()
 {
 	return _spriteEnnemi.getGlobalBounds();
 }
 
+// donne le sprite
 Sprite ennemi::getSprite()
 {
 	return _spriteEnnemi;
 }
 
+// update l'ennemi
 void ennemi::update(float variationTemps, Vector2f positionJoueur)
 {
 	float joueurPosX = positionJoueur.x;
@@ -98,29 +113,27 @@ void ennemi::update(float variationTemps, Vector2f positionJoueur)
 	_spriteEnnemi.setOrigin(_spriteEnnemi.getGlobalBounds().width / 2, _spriteEnnemi.getGlobalBounds().width / 2); // permet de centrer l'ennemi
 
 	// Update la position des ennemis
-	if (_move)
+	if (_move)	// si il a le droit de bouger
 	{
+		if (joueurPosX > _position.x)
+		{
+			_position.x = _position.x + _speed * variationTemps;
+		}
 
-	
-	if (joueurPosX > _position.x)
-	{
-		_position.x = _position.x + _speed * variationTemps;
-	}
+		if (joueurPosY > _position.y)
+		{
+			_position.y = _position.y + _speed * variationTemps;
+		}
 
-	if (joueurPosY > _position.y)
-	{
-		_position.y = _position.y + _speed * variationTemps;
-	}
+		if (joueurPosX < _position.x)
+		{
+			_position.x = _position.x - _speed * variationTemps;
+		}
 
-	if (joueurPosX < _position.x)
-	{
-		_position.x = _position.x - _speed * variationTemps;
-	}
-
-	if (joueurPosY < _position.y)
-	{
-		_position.y = _position.y - _speed * variationTemps;
-	}
+		if (joueurPosY < _position.y)
+		{
+			_position.y = _position.y - _speed * variationTemps;
+		}
 	}
 
 	// Bouge le sprite
@@ -132,6 +145,7 @@ void ennemi::update(float variationTemps, Vector2f positionJoueur)
 	setTextureAnimation(positionJoueur);
 }
 
+// modifie les stats
 void ennemi::setEnnemi(int speed, double pv)
 {
 	_speed = speed - rand() % 30; // Modifie la speed de chaque pour qu'il ne se déplace pas tous en même temps
@@ -139,6 +153,7 @@ void ennemi::setEnnemi(int speed, double pv)
 	_enVie = true;
 }
 
+// modifie la texture 
 void ennemi::setTextureAnimation(Vector2f positionJoueur)
 {
 	IntRect rectSprite(0, 0, 32, 32);
@@ -243,53 +258,63 @@ void ennemi::setTextureAnimation(Vector2f positionJoueur)
 	std::cout << "ennemi animation << " << _frameActuel << std::endl;
 }
 
+// place la hitbox
 void ennemi::setHitboxPos(sf::Vector2f pos)
 {
 	sf::FloatRect r(pos.x, pos.y, 16, 19);
 	_hitbox = r;
 }
 
+// change la position
 void ennemi::setPos(sf::Vector2f pos)
 {
 	_position = pos;
 }
 
+// bouge en haut
 void ennemi::moveUp(float dt) {
 	_position.y -= _speed * dt;
 }
 
+// bouge en bas
 void ennemi::moveDown(float dt) {
 	_position.y += _speed * dt;
 }
 
+// bouge a gauche
 void ennemi::moveLeft(float dt) {
 	_position.x -= _speed * dt;
 }
 
+// bouge a droite
 void ennemi::moveRight(float dt) {
 	_position.x += _speed * dt;
 }
 
+// set le droit de bouger
 void ennemi::setMove(bool move) {
 	_move = move;
 }
 
+// donne la taille
 sf::Vector2u ennemi::getTaille()
 {
 	return _taille;
 }
 
+// donne la pos coord
 sf::Vector2f ennemi::getVectPosition()
 {
 	return _position;
 }
 
+// donne la hit box en rect
 sf::FloatRect ennemi::getRectShape()
 {
 	return _hitbox;
 }
 
-//TODO valider pertinence
+// copieur
 const ennemi& ennemi::operator=(const ennemi& e)
 {
 	_speed = e._speed;
