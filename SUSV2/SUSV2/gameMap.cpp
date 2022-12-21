@@ -1,10 +1,15 @@
 #include "gameMap.h"
 
-gameMap::gameMap(gameDataRef data) : _data(data)
+gameMap::gameMap(gameDataRef data, int index, int offsetX, int offsetY) : _data(data)
 {
 	matrice<int> mapLue;
 
-	ifstream fichierMap(MAP_MAIN_FILEPATH); //ouverture du ficher
+	ifstream fichierMap;
+	if(index == 0)
+	fichierMap.open(MAP_MAIN_FILEPATH); //ouverture du ficher
+	else
+	fichierMap.open(MAP_BOSS_FILEPATH); //map du boss
+
 	int nbLine, nbCol;
 	if (fichierMap.is_open())
 	{
@@ -31,7 +36,7 @@ gameMap::gameMap(gameDataRef data) : _data(data)
 				tile = rand() % 3;
 			rect.left = tile * MAP_TILESET_SIZE;
 			sprite.setTextureRect(rect);
-			sprite.setPosition(j * MAP_TILESET_SIZE, i * MAP_TILESET_SIZE);
+			sprite.setPosition(j * MAP_TILESET_SIZE + offsetX, i * MAP_TILESET_SIZE + offsetY);
 			if (tile <= 3 || tile >= 21)
 				_mapSpritesSol.push_back(sprite);
 			else

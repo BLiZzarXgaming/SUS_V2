@@ -60,7 +60,7 @@ void mainMenuState::handleInput()
 					switch (getBouttonChoisi()) // prend l'index du boutton choisi
 					{
 					case 0: //solo
-						_data->machine.addState(stateRef(new gameState(_data)));
+						_data->machine.addState(stateRef(new bossFightState(_data)));
 						break;
 					case 1: // coop
 						_data->machine.addState(stateRef(new gameState(_data)));
@@ -78,7 +78,7 @@ void mainMenuState::handleInput()
 						_data->window.close();
 						break;
 					}
-				break;
+					break;
 			}
 		}
 	}

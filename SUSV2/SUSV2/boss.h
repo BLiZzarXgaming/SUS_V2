@@ -37,21 +37,27 @@ public:
 	void setVie(int vie);
 	void decVie();
 
-	void setX(double posX);
-	void setY(double posY);
-
-	void setPos(double posX, double posY);
-
-	void setHitboxPos(sf::Vector2f);
+	void setHitboxPos(Vector2f);
 
 	double getVie()const;
 	
-	double getX()const;
-	double getY()const;
-	sf::Sprite getSprite() const;
-	sf::FloatRect getPositionAttaque();
-	sf::FloatRect getRectShape();
-	sf::Vector2f getVectPosition();
+
+	Sprite getSpriteAttaque();
+	Sprite getSpriteTete();
+	Sprite getSpriteCorps();
+	Sprite getSpriteBras();
+
+	void setSpriteAttaquePos(int x, int y);
+	void setSpriteTetePos(int x, int y);
+	void setSpriteCorpsPos(int x, int y);
+	void setSpriteBrasPos(int x, int y);
+
+	void setTypeAttaque(int index);
+
+
+	FloatRect getPositionAttaque();
+	FloatRect getRectShape();
+	Vector2f getVectPosition();
 
 	//void update();
 	void update(float dt);

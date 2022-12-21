@@ -1,33 +1,35 @@
 #include "gameState.h"
 #include <iostream>
+
 //le constructeur utilise les : pour initialiser _data avant m�me l execution du contenu{}
 gameState::gameState(gameDataRef data) : _data(data)
 {
 	_player = nullptr;
 	_gameState = gameStates::ready;
 	_hud = nullptr;
-	_boss = nullptr;
 	_balle = nullptr;
+	_fade = nullptr;
 }
 
 gameState::~gameState() {
 	delete _player;
 	delete _map;
 	delete _hud;
-	delete _boss;
 	delete _balle;
+	delete _fade;
 }
 
 
 void gameState::init()
 {
+
 	//active le random 
 	srand(time(NULL));
 
+	_gameState = gameStates::playing;
+
 	_data->assets.loadTexture("player sprite sheet", PLAYER_SPRITESHEET_FILEPATH);
 	_player = new player(_data);
-
-	_gameState = gameStates::ready;
   
 	_data->assets.loadTexture("mapTileSet", MAP_TILESET_FILEPATH);
 	_data->assets.loadTexture("main background", MAIN_BACKGROUND_FILEPATH);
@@ -39,7 +41,7 @@ void gameState::init()
 
 	_data->assets.loadTexture("trigger", TRIGGER_FILEPATH);
 	_trigger.setTexture(_data->assets.getTexture("trigger"));
-	_trigger.setPosition(256, 2432);
+	_trigger.setPosition(2432, 224);
 
 	_viewJoueur.setCenter(_player->getPosition().left + _player->getPosition().width / 2,
 		_player->getPosition().top + _player->getPosition().height / 2);
@@ -49,15 +51,20 @@ void gameState::init()
 	_data->assets.loadTexture("player healthbar", PLAYER_HEALTH_FILEPATH);
 	_data->assets.loadTexture("boss spritesheet", BOSS_SPRITESHEET_FILEPATH);
 
+
 	_boss = new boss(_data);
 
 	_data->assets.loadTexture("bullet", BULLET_FILEPATH);
 
 	_balle = new bullet(_data);
 	_hud = new Hud(_data);
-	_map = new gameMap(_data);
+
+	
+	_map = new gameMap(_data, 0, 0, 0);
+
 
 	_collidingWallID = 0;
+  }
 
 	// pour ennemi les textures
 	_data->assets.loadTexture("ennemi sprite sheet vivant", ENNEMI_SPRITESHEET_FILEPATH_VIVANT);
@@ -77,6 +84,7 @@ void gameState::init()
 }
 
 //fenetre qui reste ouverte tant qu�elle n�est pas ferm�e
+
 void gameState::handleInput()
 {
 	Event event;
@@ -154,15 +162,29 @@ void gameState::handleInput()
 //aucune update
 void gameState::update(float dt)
 {
+
 	//si ce n est pas gameOver
 	if (_gameState != gameStates::gameOver) {
 		//rajouter un if qui dit a l'ennemie de se diriger vers le player si il est dans le range
 	}
 	//si c�est playing, on a clique, donc on joue.
 
-	if (_gameState == gameStates::playing) {
 
+	if (_gameState == gameStates::playing) 
+	{
+		_viewJoueur.setCenter(_player->getPosition().left + _player->getPosition().width / 2,
+			_player->getPosition().top + _player->getPosition().height / 2);
+		_background.setPosition(_player->getX(), _player->getY() + 64);
+
+		if (_collision.checkSpriteCollision(_player->getSprite(), 1.0f, _trigger, 1)) {
+			_gameState = bossFight;
+		}
 	}
+	else if (_gameState == gameStates::bossFight) 
+	{
+		_data->machine.addState(stateRef(new bossFightState(_data)));
+	}
+
 
 	//METTRE LE CODE EN DESSOUS DANS LE IF() DU PLAYING LORSQUE LE MENU METTERA LE GAMESTATE A PLAYING
 
@@ -174,6 +196,7 @@ void gameState::update(float dt)
 
 	_viewJoueur.setCenter(_player->getPosition().left + _player->getPosition().width / 2,
 		_player->getPosition().top + _player->getPosition().height / 2);
+
 
 	// Position de la souris dans le jeu
 	_posSourisJeu = _data->window.mapPixelToCoords(
@@ -224,6 +247,7 @@ void gameState::update(float dt)
 			_player->setCanMove(true);
 		}
 
+
 		for (int j = 0; j < _ennemis.size(); j++)
 		{
 			if (_collision.checkSpriteCollision(_ennemis[j]->getSprite(), 0.6f, _map->getWalls().at(i), 1)) {
@@ -259,14 +283,16 @@ void gameState::update(float dt)
 		
 	}
 
+
 	//if (_player->getY() > 150)		//fait en sorte que le background ne descende pas lorsque le joueur est bas dans la map
 		//_background.setPosition(_player->getX(), 150);
 	//else
-	_background.setPosition(_player->getX(), _player->getY() + 64);
+
 
 
 	_hud->updateVie(_player->getVie());
 	_hud->setPosition(Vector2f(_player->getX() +75, _player->getY() +54));
+
 
 
 	for (int i = 0; i < _ennemis.size(); i++)
@@ -282,6 +308,7 @@ void gameState::update(float dt)
 
 
 //clear, dessine le background et display la fenetre. (dt neest pas utilise ici)
+
 void gameState::draw(float dt) const
 {
 	_data->window.clear();	//nettoie la fenetre
@@ -300,7 +327,8 @@ void gameState::draw(float dt) const
 
 	_balle->draw();
 
+
 	_hud->draw();
-	
+	_data->window.draw(_trigger);
 	_data->window.display();	//affiche la frame
 }
