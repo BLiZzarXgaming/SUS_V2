@@ -180,7 +180,7 @@ void bossFightState::update(float dt)
 			it->live = false;
 		}
 	if (_gameState == gameStates::gameWin) {
-			_data->machine.addState(stateRef(new gameWinState(_data, _score)), true);
+			_data->machine.addState(stateRef(new gameWinState(_data, _score)));
 	}
 
 	for (int i = 0; i < _map->getWalls().size(); i++)

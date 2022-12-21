@@ -80,6 +80,7 @@ public:
 	void setCanMove(bool);															// set si peut bouger
 	void setDirectionEnumHB(int);													// set enum haut bas
 	void setDirectionEnumGD(int);													// set enumgauche droite
+	void setScore(int score);
 
 	double getVie()const;															// donne la vie actuelle
 	double getMaxVie() const;														// donne la vie max 

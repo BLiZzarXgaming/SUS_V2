@@ -166,7 +166,7 @@ void gameState::update(float dt)
 	if (_gameState != gameStates::gameOver) {
 		//rajouter un if qui dit a l'ennemie de se diriger vers le player si il est dans le range
 	}
-	//si c�est playing, on a clique, donc on joue.
+	//si c est playing, on a clique, donc on joue.
 
 
 	if (_gameState == gameStates::playing) 

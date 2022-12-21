@@ -360,7 +360,7 @@ void player::setPlayerTexture() {
 
 	if (angle > 135) {      //Gauche
 
-		if (_frameActuel >= _nbrImageDroiteetGauche - 1 || !mouvement)
+		if (_frameActuel >= _nbrImageDroite - 1 || !mouvement)
 		{
 			_frameActuel = 0;
 		}
@@ -378,7 +378,7 @@ void player::setPlayerTexture() {
 
 	if (angle < 135 && angle > 45 && _positionJoueur.y < _posViseur.y) { // Bas
 
-		if (_frameActuel >= _nbrImageHautetBas - 1 || !mouvement)
+		if (_frameActuel >= _nbrImageHaut - 1 || !mouvement)
 		{
 			_frameActuel = 1;
 		}
@@ -396,7 +396,7 @@ void player::setPlayerTexture() {
 
 	if (angle < 45) {                                                  // Droite
 
-		if (_frameActuel >= _nbrImageDroiteetGauche - 1 || !mouvement)
+		if (_frameActuel >= _nbrImageDroite - 1 || !mouvement)
 		{
 			_frameActuel = 0;
 		}
@@ -414,7 +414,7 @@ void player::setPlayerTexture() {
 
 	if (angle < 135 && angle > 45 && _positionJoueur.y > _posViseur.y) { // Haut
 
-		if (_frameActuel >= _nbrImageHautetBas - 1 || !mouvement)
+		if (_frameActuel >= _nbrImageHaut - 1 || !mouvement)
 		{
 			_frameActuel = 1;
 		}

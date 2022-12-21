@@ -5,6 +5,7 @@
 #include "game.h"
 #include "state.hpp"
 #include "gameState.h"
+#include "mainMenuState.h"
 #include <fstream>
 
 using namespace sf;
@@ -17,15 +18,12 @@ private:
 	gameDataRef _data; //chaque state recevra le pointeur sur la gameData qui
 	//donne accès au stateMachine, au RenderWindow, au
 	//assertManager et au inputManager
-	Sprite _background; //le sprite pour la background
-	Sprite _gameOverTitle;
-	Sprite _gameOverContainer;
-	Sprite _retryButton;
+	
+	
 	Text _scoreText;
-	Text _highScoreText;
+	RectangleShape _rectangle;
 	int _score;
-	int _highScore;
-	Sprite _medal;
+	
 public:
 	gameOverState(gameDataRef data, int score);
 	void init();
