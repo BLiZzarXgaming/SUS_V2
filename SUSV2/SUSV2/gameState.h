@@ -11,8 +11,8 @@
 #include "state.hpp"
 #include "gameMap.h"
 #include "hud.h"
+#include "boss.h"
 #include "collision.h"
-
 
 using namespace sf;
 using namespace std;
@@ -25,7 +25,9 @@ private:
 	gameDataRef _data;
 
 	Sprite _background;					//le sprite pour la background
+	Sprite _trigger;
 	player* _player;
+	boss* _boss;
 
 	Clock _clock;
 

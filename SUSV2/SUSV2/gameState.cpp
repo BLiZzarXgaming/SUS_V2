@@ -6,14 +6,15 @@ gameState::gameState(gameDataRef data) : _data(data)
 	_player = nullptr;
 	_gameState = gameStates::ready;
 	_hud = nullptr;
+	_boss = nullptr;
 	_balle = nullptr;
-	
 }
 
 gameState::~gameState() {
 	delete _player;
 	delete _map;
 	delete _hud;
+	delete _boss;
 	delete _balle;
 }
 
@@ -33,6 +34,9 @@ void gameState::init()
 
 	_player->setPos(64, 128, false);	//place le joueur dans la map
 
+	_data->assets.loadTexture("trigger", TRIGGER_FILEPATH);
+	_trigger.setTexture(_data->assets.getTexture("trigger"));
+	_trigger.setPosition(256, 2432);
 
 	_viewJoueur.setCenter(_player->getPosition().left + _player->getPosition().width / 2,
 		_player->getPosition().top + _player->getPosition().height / 2);
@@ -40,6 +44,9 @@ void gameState::init()
 	_viewJoueur.zoom(0.2f); // set le zoom de la view du joueur
 
 	_data->assets.loadTexture("player healthbar", PLAYER_HEALTH_FILEPATH);
+	_data->assets.loadTexture("boss spritesheet", BOSS_SPRITESHEET_FILEPATH);
+
+	_boss = new boss(_data);
 
 	_hud = new Hud(_data);
 	
@@ -186,14 +193,17 @@ void gameState::update(float dt)
 
 	//cout << "  canMove: " << _player->getCanMove() << "   " << endl;
 
-	if (_player->getY() > 150)		//fait en sorte que le background ne descende pas lorsque le joueur est bas dans la map
-		_background.setPosition(_player->getX(), 150);
-	else
-	_background.setPosition(_player->getVectPosition());
+	//if (_player->getY() > 150)		//fait en sorte que le background ne descende pas lorsque le joueur est bas dans la map
+		//_background.setPosition(_player->getX(), 150);
+	//else
+	_background.setPosition(_player->getX(), _player->getY() + 64);
 
 	//_hud->setBalle(_player.getballe());  //RAJOUTER QUE L'ON PEUT ALLER CHERCHER LE NOMBRE DE BALLES
 	_hud->updateVie(_player->getVie());
 	_hud->setPosition(Vector2f(_player->getX() +75, _player->getY() +54));
+
+	_boss->setBossTexture();
+}
 
 	
 
@@ -208,6 +218,7 @@ void gameState::draw(float dt) const
 	_data->window.draw(_background);
 	_map->draw();
 	_player->draw();
+	_boss->draw();
 	_hud->draw();
 	
 	_data->window.display();	//affiche la frame

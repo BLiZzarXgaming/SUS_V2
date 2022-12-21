@@ -24,6 +24,8 @@
 
 #define PLAYER_HEALTH_FILEPATH "Ressources/res/SUS_Player_healthbar.png"
 
+#define BOSS_SPRITESHEET_FILEPATH "Ressources/res/SUS_Boss_Spritesheet.png"
+#define TRIGGER_FILEPATH "Ressources/res/SUS_Trigger.png"
 enum gameStates {
 	ready,
 	playing,
