@@ -16,7 +16,7 @@ private:
 	vector<Sprite> _mapSpritesSol;
 
 public:
-	gameMap(gameDataRef data);
+	gameMap(gameDataRef data, int index, int offsetX, int offsetY);
 	void draw()const;
 	const vector<Sprite>& getWalls()const;
 };

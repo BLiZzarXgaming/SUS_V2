@@ -1,59 +1,64 @@
-#include "gameState.h"
+﻿#include "bossFightState.h"
 #include <iostream>
 
-gameState::gameState(gameDataRef data) : _data(data)
+bossFightState::bossFightState(gameDataRef data) : _data(data)
 {
 	_player = nullptr;
 	_gameState = gameStates::ready;
 	_hud = nullptr;
+	_boss = nullptr;
 	_balle = nullptr;
-	_fade = nullptr;
 }
 
-gameState::~gameState() {
+bossFightState::~bossFightState() {
 	delete _player;
 	delete _map;
 	delete _hud;
+	delete _boss;
 	delete _balle;
-	delete _fade;
 }
 
 
-void gameState::init()
+void bossFightState::init()
 {
-	_gameState = gameStates::playing;
 	_data->assets.loadTexture("player sprite sheet", PLAYER_SPRITESHEET_FILEPATH);
 	_player = new player(_data);
-  
+
+	_gameState = gameStates::playing;
+
 	_data->assets.loadTexture("mapTileSet", MAP_TILESET_FILEPATH);
 	_data->assets.loadTexture("main background", MAIN_BACKGROUND_FILEPATH);
 	_background.setTexture(_data->assets.getTexture("main background"));
-	_background.setPosition(100, -20);
+	_background.setPosition(128,20);
 	_background.setOrigin(250, 164);
 
-	_player->setPos(64, 128, false);	//place le joueur dans la map
-
-	_data->assets.loadTexture("trigger", TRIGGER_FILEPATH);
-	_trigger.setTexture(_data->assets.getTexture("trigger"));
-	_trigger.setPosition(2432, 224);
+	_player->setPos(196, 64,false);	//place le joueur dans la map
 
 	_viewJoueur.setCenter(_player->getPosition().left + _player->getPosition().width / 2,
 		_player->getPosition().top + _player->getPosition().height / 2);
 	_viewJoueur.setSize(_data->window.getSize().x, _data->window.getSize().y);
-	_viewJoueur.zoom(0.2f); // set le zoom de la view du joueur
+	_viewJoueur.zoom(0.25f); // set le zoom de la view du joueur
 
 	_data->assets.loadTexture("player healthbar", PLAYER_HEALTH_FILEPATH);
 	_data->assets.loadTexture("boss spritesheet", BOSS_SPRITESHEET_FILEPATH);
 
+	_boss = new boss(_data);
+
 	_hud = new Hud(_data);
+
+	_map = new gameMap(_data, 1, -64, 29);
+
+	_boss->setTypeAttaque(0);
 	
-	_map = new gameMap(_data, 0, 0, 0);
+	_boss->setBossTexture();
+	_boss->setSpriteCorpsPos(196, 0);
+	
 
 	_collidingWallID = 0;
-  }
+}
 
-
-void gameState::handleInput()
+//fen�tre qui reste ouverte tant qu�elle n�est pas ferm�e
+void bossFightState::handleInput()
 {
 	Event event;
 	while (_data->window.pollEvent(event))
@@ -95,13 +100,13 @@ void gameState::handleInput()
 
 			if (Keyboard::isKeyPressed(Keyboard::R)) {	//recharge avec R
 				_player->reload();
-			}	
+			}
 
 			if (Keyboard::isKeyPressed(Keyboard::Escape)) {
 				_data->window.close();
 			}
 
-			
+
 		}
 	}
 
@@ -121,28 +126,21 @@ void gameState::handleInput()
 	}
 }
 //aucune update
-void gameState::update(float dt)
+void bossFightState::update(float dt)
 {
-	
+	//si ce n�est pas gameOver
 	if (_gameState != gameStates::gameOver) {
 		//rajouter un if qui dit a l'ennemie de se diriger vers le player si il est dans le range
 	}
-	
+	//si c�est playing, on a cliqu�, donc on joue.
 
-	if (_gameState == gameStates::playing) 
+	if (_gameState == gameStates::playing)
 	{
-		_viewJoueur.setCenter(_player->getPosition().left + _player->getPosition().width / 2,
-			_player->getPosition().top + _player->getPosition().height / 2);
-		_background.setPosition(_player->getX(), _player->getY() + 64);
+		_boss->setBossTexture();
+	}
+	//METTRE LE CODE EN DESSOUS DANS LE IF() DU PLAYING LORSQUE LE MENU METTERA LE GAMESTATE A PLAYING
 
-		if (_collision.checkSpriteCollision(_player->getSprite(), 1.0f, _trigger, 1)) {
-			_gameState = bossFight;
-		}
-	}
-	else if (_gameState == gameStates::bossFight) 
-	{
-		_data->machine.addState(stateRef(new bossFightState(_data)));
-	}
+
 
 	// Position de la souris dans le jeu
 	_posSourisJeu = _data->window.mapPixelToCoords(
@@ -168,7 +166,7 @@ void gameState::update(float dt)
 			{
 				_player->moveDown();
 			}
-				
+
 			else if (_collidingWallID == 7)
 				_player->moveRight();
 			else if (_collidingWallID == 6)
@@ -181,7 +179,7 @@ void gameState::update(float dt)
 		}
 
 
-	
+
 	//if (_player->getDirectionEnumHB() == directionEnumHB::haut)
 	//	cout << "haut  ";
 	//if (_player->getDirectionEnumHB() == directionEnumHB::bas)
@@ -204,19 +202,22 @@ void gameState::update(float dt)
 
 	//_hud->setBalle(_player.getballe());  //RAJOUTER QUE L'ON PEUT ALLER CHERCHER LE NOMBRE DE BALLES
 	_hud->updateVie(_player->getVie());
-	_hud->setPosition(Vector2f(_player->getX() +75, _player->getY() +54));
+	_hud->setPosition(Vector2f(_player->getX() + 75, _player->getY() + 54));
+
+	_boss->update(dt);
 }
 
-	//-------JUSQU'ICI---------------------------------------------------
+//-------JUSQU'ICI---------------------------------------------------
 
-void gameState::draw(float dt) const
+
+void bossFightState::draw(float dt) const
 {
 	_data->window.clear();	//nettoie la fenetre
 	_data->window.setView(_viewJoueur);
 	_data->window.draw(_background);
 	_map->draw();
 	_player->draw();
+	_boss->draw();
 	_hud->draw();
-	_data->window.draw(_trigger);
 	_data->window.display();	//affiche la frame
 }

@@ -31,32 +31,37 @@ void boss::decVie()
 	_vie--;
 }
 
-void boss::setX(double posX) {
-	_positionBoss.x = posX;
-}
-
-void boss::setY(double posY) {
-	_positionBoss.y = posY;
-}
-
-void boss::setPos(double posX, double posY) {
-	setX(posX);
-	setY(posY);
-}
-
-
 double boss::getVie()const {
 	return _vie;
 }
 
-double boss::getX()const
-{
-	return _positionBoss.x;
+Sprite boss::getSpriteAttaque(){
+	return _spriteAttaque;
+}
+Sprite boss::getSpriteTete() {
+	return _spriteTete;
+}
+Sprite boss::getSpriteCorps() {
+	return _spriteCorps;
+}
+Sprite boss::getSpriteBras() {
+	return _spriteBras;
 }
 
-double boss::getY()const
-{
-	return _positionBoss.y;
+void boss::setSpriteAttaquePos(int x, int y) {
+	_spriteAttaque.setPosition(x, y);
+}
+
+void boss::setSpriteTetePos(int x, int y) {
+	_spriteTete.setPosition(x, y);
+}
+
+void boss::setSpriteCorpsPos(int x, int y) {
+	_spriteCorps.setPosition(x, y);
+}
+
+void boss::setSpriteBrasPos(int x, int y) {
+	_spriteBras.setPosition(x, y);
 }
 
 void boss::setHitboxPos(sf::Vector2f pos)
@@ -65,11 +70,9 @@ void boss::setHitboxPos(sf::Vector2f pos)
 	_hitbox = r;
 }
 
-
-//sf::FloatRect boss::getPositionAttaque() // pour les collisions
-//{
-//	//return _sprite.getGlobalBounds();
-//}
+void boss::setTypeAttaque(int index) {
+	_typeAttaque = index;
+}
 
 sf::FloatRect boss::getRectShape()
 {

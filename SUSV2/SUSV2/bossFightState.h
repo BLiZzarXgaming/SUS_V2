@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <SFML/Graphics.hpp>
 #include "DEFINITIONS.hpp"
@@ -14,21 +14,20 @@
 #include "boss.h"
 #include "collision.h"
 #include "fade.h"
-#include "bossFightState.h"
 
 using namespace sf;
 using namespace std;
 //chaque state repr�sentera une vraie fen�tre et h�rite de state, car on impl�mentera 
 //un init, update, draw et handleInput diff�rent pour chaque fen�tre.
 
-class gameState : public state
+class bossFightState : public state
 {
 private:
 	gameDataRef _data;
 
 	Sprite _background;					//le sprite pour la background
-	Sprite _trigger;
 	player* _player;
+	boss* _boss;
 
 	Clock _clock;
 
@@ -44,16 +43,14 @@ private:
 
 	Hud* _hud;
 
-	fade* _fade;
-
 	bullet* _balle;
 
 	collision _collision;
 
 
 public:
-	gameState(gameDataRef data);
-	~gameState();
+	bossFightState(gameDataRef data);
+	~bossFightState();
 	void init();
 	void handleInput();
 	void update(float dt);
