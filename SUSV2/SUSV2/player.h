@@ -1,8 +1,8 @@
 /********************************************************************************************/
-/* Auteur      : Xavier Caouette, Louis-Philippe Racette									*/
+/* Auteur      : Xavier Caouette, Louis-Philippe Racette									                  */
 /* Nom         : player.h                                                                   */
 /* Date        : 21 decembre 2022                                                           */
-/* But         : gestion d un joueur et de son affichage									*/
+/* But         : gestion d un joueur et de son affichage									                  */
 /********************************************************************************************/
 #pragma once
 #include "DEFINITIONS.hpp"
@@ -33,6 +33,7 @@ private:
 	int _nbrBalleReste;																// nbr de balle qui reste
 	int _balleActuel;																// la balle actuel
 	bool _canMove;																	// si il peut bouger
+  int _score;
 	
 	sf::Sprite _sprite;																// sprite viseur										
 	sf::Vector2f _posViseur;														// la position du viseur
@@ -53,7 +54,7 @@ private:
 		
 	std::queue<Vector2f> _memoirePos;												// une structure de queue pour garder en 
 																					// memoire quelques positions du joueur
-																					// (utilisé pour les collisions)
+																					// (utilisÃ© pour les collisions)
 
 public:
 	player(gameDataRef data);														// constructeur
@@ -94,6 +95,7 @@ public:
 	sf::Vector2f getMemoirePos() const;												// donne la position du joueur en memoire
 	int getDirectionEnumHB()const;													// donne enum haut bas
 	int getDirectionEnumGD()const;													// donne enum haut bas
+  int getScore()const;                                    // donne le score
 
 	bool getCanMove()const;															// donne si on peut bouger
 	void moveUp();																	// bouge le joueur en haut

@@ -1,14 +1,10 @@
-#pragma once
-#include <vector>
+﻿#pragma once
 #include <SFML/Graphics.hpp>
-#include <stdlib.h>     /* srand, rand */
-#include <time.h>       /* time */
 #include "DEFINITIONS.hpp"
 #include "game.h"
 #include "state.hpp"
-#include "bullet.h"
 #include "player.h"
-#include "ennemi.h"
+#include "bullet.h"
 #include <SFML/Audio.hpp>
 #include <iostream>
 #include "state.hpp"
@@ -17,22 +13,22 @@
 #include "boss.h"
 #include "collision.h"
 #include "fade.h"
-#include "bossFightState.h"
-#include "gameOverState.h"
+#include "gameWinState.h"
+
 
 using namespace sf;
 using namespace std;
 //chaque state repr�sentera une vraie fen�tre et h�rite de state, car on impl�mentera 
 //un init, update, draw et handleInput diff�rent pour chaque fen�tre.
 
-class gameState : public state
+class bossFightState : public state
 {
 private:
 	gameDataRef _data;
 
 	Sprite _background;					//le sprite pour la background
-	Sprite _trigger;
 	player* _player;
+	boss* _boss;
 
 	Clock _clock;
 	Time _variationTemps;
@@ -40,7 +36,6 @@ private:
 	Time _lastShot;
 
 	int _gameState;
-
 	int _score;
 
 	sf::Vector2f _posSourisJeu;
@@ -53,20 +48,14 @@ private:
 
 	Hud* _hud;
 
-	fade* _fade;
-
 	bullet* _balle;
 
 	collision _collision;
 
-	std::vector<ennemi*> _ennemis;
-
-	boss* _boss;
-
 
 public:
-	gameState(gameDataRef data);
-	~gameState();
+	bossFightState(gameDataRef data, int score);
+	~bossFightState();
 	void init();
 	void handleInput();
 	void update(float dt);

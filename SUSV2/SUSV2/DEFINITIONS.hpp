@@ -24,14 +24,21 @@
 
 #define PLAYER_HEALTH_FILEPATH "Ressources/res/SUS_Player_healthbar.png"
 
-#define NBR_ENNEMI_MAX 10
+
+#define NBR_ENNEMI_MAX 5
 #define ENNEMI_SPRITESHEET_FILEPATH_VIVANT "ressources/images/ennemi.png"
 #define ENNEMI_SPRITESHEET_FILEPATH_MORT "ressources/images/ennemiemort.png"
+#define BOSS_SPRITESHEET_FILEPATH "Ressources/res/SUS_Boss_Spritesheet.png"
+#define TRIGGER_FILEPATH "Ressources/res/SUS_Trigger.png"
+
+#define FADE_SPEED 1500.0f
 
 enum gameStates {
 	ready,
 	playing,
-	gameOver
+	gameOver,
+	bossFight,
+	gameWin
 };
 
 enum directionEnumHB {
@@ -49,5 +56,6 @@ enum directionEnumGD {
 #define MAP_TILESET_FILEPATH "Ressources/tileset/Sus_Tileset_Flooring.png"
 #define MAP_TILESET_SIZE 32		//grandeur carrée des textures
 #define MAP_MAIN_FILEPATH "Ressources/maps/map_2.txt"
+#define MAP_BOSS_FILEPATH "Ressources/maps/map_3.txt"
 #define MAIN_BACKGROUND_FILEPATH "Ressources/SUS_Background.png"
 

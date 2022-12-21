@@ -147,6 +147,7 @@ void player::setDirectionEnumGD(int dir)
 	_directionEnumGD = dir;
 }
 
+
 // donne la vie actuelle
 double player::getVie()const {
 	return _vie;
@@ -171,6 +172,12 @@ double player::getX()const
 }
 
 // donne la position y du sprite
+
+void player::setScore(int score)
+{
+	_score = score;
+}
+
 double player::getY()const
 {
 	return _positionJoueur.y;
@@ -266,6 +273,12 @@ void player::noMoveUp()
 	_haut = false;
 }
 
+// donne le score
+int player::getScore() const
+{
+	return _score;
+}
+
 // empeche de bouger en bas
 void player::noMoveDown()
 {
@@ -288,9 +301,9 @@ void player::noMoveLeft()
 void player::update(float dtEnSeconde)
 {
 	if ((_haut && _droite) || (_haut && _gauche) || (_bas && _droite) || (_bas && _gauche)) //Permet de ne pas courrir 2x plus vite en diagonal
-		_speed = 50;
+		_speed = 50; //normalement 50
 	else
-		_speed = 80;
+		_speed = 80; //normalement 80
 
 	_sprite.setOrigin(_sprite.getGlobalBounds().width / 2, _sprite.getGlobalBounds().width / 2);	// permet de centrer l'ennemi
 
@@ -312,7 +325,7 @@ void player::update(float dtEnSeconde)
 	}
 	_sprite.setPosition(_positionJoueur);
 
-	_tempsAnimation += dtEnSeconde; // ajoute le temps passé au temps de l'animation
+	_tempsAnimation += dtEnSeconde; // ajoute le temps passÃ© au temps de l'animation
 
 	setPlayerTexture(); // va updater la texture du joueur
 }
@@ -330,7 +343,7 @@ void player::setPlayerTexture() {
 
 	dirVec.x = (dirVec.x) / magSquare;
 
-	//l'angle et le change en degré
+	//l'angle et le change en degrÃ©
 	float angle = std::acos(dirVec.x) * (180 / 3.141);          // 180 ----------- 0           direction angle 
 
 	//regarde si on bouge
@@ -347,7 +360,7 @@ void player::setPlayerTexture() {
 
 	if (angle > 135) {      //Gauche
 
-		if (_frameActuel >= _nbrImageGauche - 1 || !mouvement)
+		if (_frameActuel >= _nbrImageDroiteetGauche - 1 || !mouvement)
 		{
 			_frameActuel = 0;
 		}
@@ -365,7 +378,7 @@ void player::setPlayerTexture() {
 
 	if (angle < 135 && angle > 45 && _positionJoueur.y < _posViseur.y) { // Bas
 
-		if (_frameActuel >= _nbrImageBas - 1 || !mouvement)
+		if (_frameActuel >= _nbrImageHautetBas - 1 || !mouvement)
 		{
 			_frameActuel = 1;
 		}
@@ -383,7 +396,7 @@ void player::setPlayerTexture() {
 
 	if (angle < 45) {                                                  // Droite
 
-		if (_frameActuel >= _nbrImageDroite - 1 || !mouvement)
+		if (_frameActuel >= _nbrImageDroiteetGauche - 1 || !mouvement)
 		{
 			_frameActuel = 0;
 		}
@@ -401,7 +414,7 @@ void player::setPlayerTexture() {
 
 	if (angle < 135 && angle > 45 && _positionJoueur.y > _posViseur.y) { // Haut
 
-		if (_frameActuel >= _nbrImageHaut - 1 || !mouvement)
+		if (_frameActuel >= _nbrImageHautetBas - 1 || !mouvement)
 		{
 			_frameActuel = 1;
 		}
