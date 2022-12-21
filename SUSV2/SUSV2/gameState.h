@@ -33,6 +33,9 @@ private:
 	boss* _boss;
 
 	Clock _clock;
+	Time _variationTemps;
+	Time _dureeJeu;
+	Time _lastShot;
 
 	int _gameState;
 
