@@ -30,27 +30,16 @@ enum gameStates {
 	gameOver
 };
 
-enum tileType {
-	sgp1,
-	sgf1,
-	sgp2,
-	sgf2,
-	mbh_,
-	mbd_,
-	mbg_,
-	mbb_,
-	mchg,
-	mchd,
-	mcbg,
-	mcbd,
-	mihd,
-	mihg,
-	mibd,
-	mibg,
-	mmh_,
-	mmb_,
-	fh__,
-	fb__
+enum directionEnumHB {
+	nohb,
+	haut,
+	bas
+};
+
+enum directionEnumGD {
+	nogd,
+	gauche,
+	droite
 };
 
 #define MAP_TILESET_FILEPATH "Ressources/tileset/Sus_Tileset_Flooring.png"

@@ -2,6 +2,7 @@
 #include "DEFINITIONS.hpp"
 #include "game.h"
 #include "state.hpp"
+#include <queue>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
@@ -20,8 +21,11 @@ private:
 	int _damage;
 	bool _direction, _haut = false, _bas = false, _droite = false, _gauche = false;
 	sf::Vector2f _vraiDir;
+	int _directionEnumHB;
+	int _directionEnumGD;
 	int _nbrBalleReste;
 	int _balleActuel;
+	bool _canMove;
 
 	sf::Sprite _sprite;
 	sf::Texture _playerTexture;
@@ -40,6 +44,10 @@ private:
 
 	sf::FloatRect _hitbox;
 
+	std::queue<Vector2f> _memoirePos;	// une structure de queue pour garder en 
+										// memoire quelques positions du joueur
+										// (utilisé pour les collisions)
+
 public:
 	player(gameDataRef data);
 	~player();
@@ -55,10 +63,15 @@ public:
 	void setDir(bool direction);
 	void setDamage(double damage);
 	void setPos(double posX, double posY, bool direction);
+	void setPos(sf::Vector2f);
 	void setPosViseur(sf::Vector2f posViseur);
 	void setReloadTime(int);
 	void decReloadTime();
 	void setHitboxPos(sf::Vector2f);
+	void cycleMemoirePos();
+	void setCanMove(bool);
+	void setDirectionEnumHB(int); //haut bas
+	void setDirectionEnumGD(int); //gauche droite
 
 	double getVie()const;
 	double getMaxVie() const;
@@ -71,6 +84,10 @@ public:
 	int getReloadTime();
 	sf::FloatRect getRectShape();
 	sf::Vector2f getVectPosition();
+	sf::Vector2f getMemoirePos() const;
+	int getDirectionEnumHB()const;
+	int getDirectionEnumGD()const;
+	bool getCanMove()const;
 
 	void moveUp();
 	void moveDown();

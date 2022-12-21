@@ -11,6 +11,7 @@
 #include "state.hpp"
 #include "gameMap.h"
 #include "hud.h"
+#include "collision.h"
 
 
 using namespace sf;
@@ -33,13 +34,18 @@ private:
 	sf::Vector2f _posSourisJeu;
 	sf::View _viewJoueur;
 
-	Music _music;
+	//Music _music;
 
 	gameMap* _map;
+	int _collidingWallID;
 
 	Hud* _hud;
 
+
 	bullet* _balle;
+
+	collision _collision;
+
 
 public:
 	gameState(gameDataRef data);
