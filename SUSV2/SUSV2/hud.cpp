@@ -2,22 +2,14 @@
 
 Hud::Hud(gameDataRef data) : _data(data)
 {
-	if (!_texture.loadFromFile("ressources/images/SUS_HealthBar_Sheet.png"))
-	{
-		//cout << "Le fichier de la texture du Hud est introuvable!";
-	}
+	
 
 	_spriteVie.setTexture(_data->assets.getTexture("player healthbar"));
 	_spriteVie.setScale(2, 2);
 	_rectVie = IntRect(0, 0, 128, 16);
 	_spriteVie.setTextureRect(_rectVie);
 
-	if (!_font.loadFromFile("ressources/fonts/Robota-NonCommercial.otf"))
-	{
-		//cout << "Le fichier de police d'ecriture est introuvable!";
-	}
-
-	_nbBalle.setFont(_font);
+	_nbBalle.setFont(_data->assets.getFont("font button"));
 	_nbBalle.setFillColor(Color::White);
 	_nbBalle.setOutlineColor(Color::Black);
 	_nbBalle.setOutlineThickness(1);
