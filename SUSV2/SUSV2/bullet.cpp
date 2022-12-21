@@ -1,40 +1,57 @@
+/********************************************************************************************/
+/* Auteur      : Louis-Philippe Racette                                                     */
+/* Nom         : bullet.cpp                                                                 */
+/* Date        : 21 decembre 2022                                                           */
+/* But         : une balle qui vole et se dessine                                           */
+/********************************************************************************************/
 #include "bullet.h"
 
 using namespace sf;
 
+// construit le bullet
 bullet::bullet(gameDataRef data) : _data(data)
 {
-	//_sprite.setTexture(_data->assets.getTexture("bullet"));
+	// les stats du bullet
 	_vitesse = SPEED_BULLET;
 	_porteBalle = RANGE_BULLET;
 	_estTire = false;
 	_distanceX = 0;
 	_distanceY = 0;
 
+	// pour l'image
 	_data->assets.loadTexture("image balle", BULLET_FILEPATH);
 	_sprite.setTexture(_data->assets.getTexture("image balle"));
 }
 
+// destructeur du bullet
 bullet::~bullet()
 {
-
+	_vitesse = 0;
+	_porteBalle = 0;
+	_estTire = false;
+	_distanceX = 0;
+	_distanceY = 0;
 }
 
+// dessine le bullet
 void bullet::draw() const
 {
 	_data->window.draw(_sprite);
 }
 
+// arrete le deplacement du bullet
 void bullet::stopVol()
 {
 	_estTire = false;
 }
 
+// regarde si le bullet est en vol
 bool bullet::getEstTire() const
 {
 	return _estTire;
 }
 
+// tire un bullet dans une direction
 void bullet::tirer(sf::Vector2f positionDepart, sf::Vector2f positionVise)
 {
 
@@ -78,16 +95,19 @@ void bullet::tirer(sf::Vector2f positionDepart, sf::Vector2f positionVise)
 	_sprite.setPosition(_position);
 }
 
+// donne la position du bullet (rectangle)
 sf::FloatRect bullet::getPosition() const
 {
 	return _sprite.getGlobalBounds();
 }
 
+// donne le sprite du bullet
 sf::Sprite bullet::getSprite() const
 {
 	return _sprite;
 }
 
+// update la balle
 void bullet::update(float dtenSeconde)
 {
 	// update la position de la balle
@@ -104,6 +124,7 @@ void bullet::update(float dtenSeconde)
 	}
 }
 
+// regarde si il touche un sprite
 bool bullet::ennemiTouche(sf::FloatRect ennemi)
 {
 	if (getPosition().intersects(ennemi)) {
@@ -115,16 +136,19 @@ bool bullet::ennemiTouche(sf::FloatRect ennemi)
 	}
 }
 
+// donne la position en coordonne
 sf::Vector2f bullet::getVectPosition()
 {
 	return _position;
 }
 
+// surcharge operateur <
 bool bullet::operator<(const sf::Vector2f& pos2) const
 {
 	return _position.x < pos2.x || _position.y < pos2.y;
 }
 
+// surcharge operateur >
 bool bullet::operator>(const sf::Vector2i& pos2) const
 {
 	return _position.x > pos2.x || _position.y > pos2.y;

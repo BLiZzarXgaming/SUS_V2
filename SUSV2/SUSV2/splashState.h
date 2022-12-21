@@ -1,3 +1,9 @@
+/********************************************************************************************/
+/* Auteur      : Louis-Philippe Racette														*/
+/* Nom         : splashState.h                                                              */
+/* Date        : 21 decembre 2022                                                           */
+/* But         : affiche un state pour mettre la compagnie et passer au menu apres          */
+/********************************************************************************************/
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "DEFINITIONS.hpp"
@@ -7,8 +13,6 @@
 using namespace sf;
 using namespace std;
 
-//chaque state representera une vraie fenetre et herite de state, car on implementera
-//un init, update, draw et handleInput different pour chaque fenetre.
 class splashState : public state
 {
 private:
@@ -16,12 +20,12 @@ private:
 	//donne acces au stateMachine, au RenderWindow, au
 	//assertManager et au inputManager
 	Clock _clock;		//1re fenetre a besoin d une clock car elle disparait
-	//au bout de quelques secondes
+						//au bout de quelques secondes
 	Sprite _background; //le sprite pour la background
 public:
-	splashState(gameDataRef data);
-	void init();
-	void handleInput();
-	void update(float dt);
-	void draw(float dt) const;
+	splashState(gameDataRef data);	// constructeur 
+	void init();					// initialise le state
+	void handleInput();				// gere les entrees
+	void update(float dt);			// update le state
+	void draw(float dt) const;		// dessine le state 
 };
