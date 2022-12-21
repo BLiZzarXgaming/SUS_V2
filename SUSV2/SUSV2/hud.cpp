@@ -7,19 +7,14 @@ Hud::Hud(gameDataRef data) : _data(data)
 	_rectVie = IntRect(0, 0, 128, 16);
 	_spriteVie.setTextureRect(_rectVie);
 
-	if (!_font.loadFromFile("ressources/fonts/Robota-NonCommercial.otf"))
-	{
-		//cout << "Le fichier de police d'ecriture est introuvable!";
-	}
-
-	_nbBalle.setFont(_font);
+	_nbBalle.setFont(_data->assets.getFont("font button"));
 	_nbBalle.setFillColor(Color::White);
 	_nbBalle.setOutlineColor(Color::Black);
 	_nbBalle.setOutlineThickness(1);
 	_nbBalle.setCharacterSize(15);
 	_nbBalle.setString("BALLE: 0");
 
-	_spriteVie.setPosition(0, 0);
+	_spriteVie.setPosition(0, 30);
 }
 
 void Hud::setBalle(int nbBalle)

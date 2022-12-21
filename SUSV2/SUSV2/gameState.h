@@ -1,11 +1,14 @@
 #pragma once
-
+#include <vector>
 #include <SFML/Graphics.hpp>
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>       /* time */
 #include "DEFINITIONS.hpp"
 #include "game.h"
 #include "state.hpp"
-#include "player.h"
 #include "bullet.h"
+#include "player.h"
+#include "ennemi.h"
 #include <SFML/Audio.hpp>
 #include <iostream>
 #include "state.hpp"
@@ -31,6 +34,9 @@ private:
 	player* _player;
 
 	Clock _clock;
+	Time _variationTemps;
+	Time _dureeJeu;
+	Time _lastShot;
 
 	int _gameState;
 
@@ -49,6 +55,8 @@ private:
 	bullet* _balle;
 
 	collision _collision;
+
+	std::vector<ennemi*> _ennemis;
 
 
 public:

@@ -1,6 +1,7 @@
 #include "gameState.h"
 #include <iostream>
 
+//le constructeur utilise les : pour initialiser _data avant m�me l execution du contenu{}
 gameState::gameState(gameDataRef data) : _data(data)
 {
 	_player = nullptr;
@@ -21,7 +22,12 @@ gameState::~gameState() {
 
 void gameState::init()
 {
+
+	//active le random 
+	srand(time(NULL));
+
 	_gameState = gameStates::playing;
+
 	_data->assets.loadTexture("player sprite sheet", PLAYER_SPRITESHEET_FILEPATH);
 	_player = new player(_data);
   
@@ -45,13 +51,39 @@ void gameState::init()
 	_data->assets.loadTexture("player healthbar", PLAYER_HEALTH_FILEPATH);
 	_data->assets.loadTexture("boss spritesheet", BOSS_SPRITESHEET_FILEPATH);
 
+
+	_boss = new boss(_data);
+
+	_data->assets.loadTexture("bullet", BULLET_FILEPATH);
+
+	_balle = new bullet(_data);
 	_hud = new Hud(_data);
+
 	
 	_map = new gameMap(_data, 0, 0, 0);
+
 
 	_collidingWallID = 0;
   }
 
+	// pour ennemi les textures
+	_data->assets.loadTexture("ennemi sprite sheet vivant", ENNEMI_SPRITESHEET_FILEPATH_VIVANT);
+	_data->assets.loadTexture("ennemi sprite sheet mort", ENNEMI_SPRITESHEET_FILEPATH_MORT);
+
+
+	_ennemis.reserve(NBR_ENNEMI_MAX);
+	// TODO les placer dans la map
+	//rempli le vecteur d'ennemi
+	for (int i = 0; i < NBR_ENNEMI_MAX; i++)
+	{
+		ennemi* temp = new ennemi(40, 10, Vector2f(64, 148), _data);
+		_ennemis.push_back(temp);
+		//delete temp;
+	}
+	_lastShot.Zero;
+}
+
+//fenetre qui reste ouverte tant qu�elle n�est pas ferm�e
 
 void gameState::handleInput()
 {
@@ -89,9 +121,7 @@ void gameState::handleInput()
 			else
 				_player->noMoveRight();
 
-			if (Mouse::isButtonPressed(Mouse::Left)) {	//tirer avec clique gauche
-
-			}
+			
 
 			if (Keyboard::isKeyPressed(Keyboard::R)) {	//recharge avec R
 				_player->reload();
@@ -100,8 +130,6 @@ void gameState::handleInput()
 			if (Keyboard::isKeyPressed(Keyboard::Escape)) {
 				_data->window.close();
 			}
-
-			
 		}
 	}
 
@@ -119,15 +147,28 @@ void gameState::handleInput()
 		_player->noMoveRight();
 		_player->noMoveLeft();
 	}
+
+	if (Mouse::isButtonPressed(Mouse::Left)) {	//tirer avec clique gauche
+		if (_dureeJeu.asMilliseconds() - _lastShot.asMilliseconds() > 250)
+		{
+			_balle->tirer(_player->getVectPosition(), _posSourisJeu);
+			_lastShot = _dureeJeu;
+		}
+			
+
+		//cout << "duree: " << _dureeJeu.asMilliseconds() << "  last: " << 
+	}
 }
 //aucune update
 void gameState::update(float dt)
 {
-	
+
+	//si ce n est pas gameOver
 	if (_gameState != gameStates::gameOver) {
 		//rajouter un if qui dit a l'ennemie de se diriger vers le player si il est dans le range
 	}
-	
+	//si c�est playing, on a clique, donc on joue.
+
 
 	if (_gameState == gameStates::playing) 
 	{
@@ -144,6 +185,19 @@ void gameState::update(float dt)
 		_data->machine.addState(stateRef(new bossFightState(_data)));
 	}
 
+
+	//METTRE LE CODE EN DESSOUS DANS LE IF() DU PLAYING LORSQUE LE MENU METTERA LE GAMESTATE A PLAYING
+
+	//  le temps écoulé entre deux frames pis se remet à zéro
+	_variationTemps = _clock.restart();
+
+	// additionne le temps total du jeu (intéressant pour des statistiques)
+	_dureeJeu += _variationTemps;
+
+	_viewJoueur.setCenter(_player->getPosition().left + _player->getPosition().width / 2,
+		_player->getPosition().top + _player->getPosition().height / 2);
+
+
 	// Position de la souris dans le jeu
 	_posSourisJeu = _data->window.mapPixelToCoords(
 		Mouse::getPosition(), _viewJoueur);
@@ -151,8 +205,21 @@ void gameState::update(float dt)
 	_player->setPosViseur(_posSourisJeu);
 	_player->update(dt);
 
+	_balle->update(dt);
 
-	for (int i = 0; i < _map->getWalls().size(); i++)
+	
+	for (list<balleEtDir>::iterator it = _balle->getBulletSprites().begin(); it != _balle->getBulletSprites().end(); it++)
+		for (int i = 0; i < _ennemis.size(); i++)
+		{
+			if (_collision.checkSpriteCollision(_ennemis[i]->getSprite(), 0.6f, (*it).balle, 1))
+			{
+				_ennemis[i]->touche(5000);
+				it->live = false;
+			}
+		}
+
+	for (int i = 0; i < _map->getWalls().size(); i++) {
+
 		if (_collision.checkSpriteCollision(_player->getSprite(), 0.6f, _map->getWalls().at(i), 1)) {
 			_player->setCanMove(false);
 			_collidingWallID = 1 + _map->getWalls().at(i).getTextureRect().left / 32;
@@ -181,33 +248,66 @@ void gameState::update(float dt)
 		}
 
 
-	
-	//if (_player->getDirectionEnumHB() == directionEnumHB::haut)
-	//	cout << "haut  ";
-	//if (_player->getDirectionEnumHB() == directionEnumHB::bas)
-	//	cout << "bas   ";
-	//if (_player->getDirectionEnumHB() == directionEnumHB::nohb)
-	//	cout << "no    ";
-	//if (_player->getDirectionEnumGD() == directionEnumGD::gauche)
-	//	cout << "gauche";
-	//if (_player->getDirectionEnumGD() == directionEnumGD::droite)
-	//	cout << "droite";
-	//if (_player->getDirectionEnumGD() == directionEnumGD::nogd)
-	//	cout << "no    ";
+		for (int j = 0; j < _ennemis.size(); j++)
+		{
+			if (_collision.checkSpriteCollision(_ennemis[j]->getSprite(), 0.6f, _map->getWalls().at(i), 1)) {
 
-	//cout << "  canMove: " << _player->getCanMove() << "   " << endl;
+				_collidingWallID = 1 + _map->getWalls().at(i).getTextureRect().left / 32;
+				if (_collidingWallID == 5 ||
+					_collidingWallID == 17 ||
+					_collidingWallID == 18 ||
+					_collidingWallID == 19 ||
+					_collidingWallID == 20 ||
+					_collidingWallID == 11 ||
+					_collidingWallID == 12 ||
+					_collidingWallID == 15 ||
+					_collidingWallID == 16)
+				{
+					_ennemis[j]->moveDown(dt);
+				}
+
+				else if (_collidingWallID == 7)
+					_ennemis[j]->moveRight(dt);
+				else if (_collidingWallID == 6)
+					_ennemis[j]->moveLeft(dt);
+				else
+					_ennemis[j]->moveUp(dt);
+
+				_ennemis[j]->setMove(false);
+			}
+			else if (i == 0) {
+				_ennemis[j]->setMove(true);
+
+			}
+		}
+		
+	}
+
 
 	//if (_player->getY() > 150)		//fait en sorte que le background ne descende pas lorsque le joueur est bas dans la map
 		//_background.setPosition(_player->getX(), 150);
 	//else
 
 
-	//_hud->setBalle(_player.getballe());  //RAJOUTER QUE L'ON PEUT ALLER CHERCHER LE NOMBRE DE BALLES
+
 	_hud->updateVie(_player->getVie());
 	_hud->setPosition(Vector2f(_player->getX() +75, _player->getY() +54));
+
+
+
+	for (int i = 0; i < _ennemis.size(); i++)
+	{
+		if (_ennemis[i]->estVivant())
+			_ennemis[i]->update(dt, _player->getVectPosition());
+
+		//std::cout << "enemi no :" << i << ": " << _ennemis[i]->getVectPosition().x << "xay : " << _ennemis[i]->getVectPosition().y << std::endl;
+	}
+	
+	_boss->setBossTexture();
 }
 
-	//-------JUSQU'ICI---------------------------------------------------
+
+//clear, dessine le background et display la fenetre. (dt neest pas utilise ici)
 
 void gameState::draw(float dt) const
 {
@@ -215,7 +315,19 @@ void gameState::draw(float dt) const
 	_data->window.setView(_viewJoueur);
 	_data->window.draw(_background);
 	_map->draw();
+
+	for (int i = 0; i < _ennemis.size(); i++)
+	{
+		_data->window.draw(_ennemis[i]->getSprite());
+	}
+	
 	_player->draw();
+
+	_boss->draw();
+
+	_balle->draw();
+
+
 	_hud->draw();
 	_data->window.draw(_trigger);
 	_data->window.display();	//affiche la frame
